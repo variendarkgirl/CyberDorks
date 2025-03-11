@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberDork - Advanced Google Dork Generator</title>
+  <link href="https://fonts.googleapis.com/css?family=Merienda+One" rel="stylesheet" type="text/css">
+  <style>
+    /* Your original CSS styling */
+    :root {
+      --bg-color: #0a0e17;
+      --panel-bg: #131c2c;
+      --accent-color: #00f0ff;
+      --success-color: #00ff9d;
+      --danger-color: #ff3860;
+      --warning-color: #ffdd57;
+      --text-color: #e0e0e0;
+      --secondary-text: #8a94a8;
+      --border-color: #1c2b45;
+      --card-bg: #1a2335;
+      --highlight: rgba(0, 240, 255, 0.1);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 240, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(191, 0, 255, 0.05) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.2) 0px, rgba(0, 0, 0, 0.2) 1px, transparent 1px, transparent 5px);
+      color: var(--text-color);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    header {
+      background-color: var(--panel-bg);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--accent-color);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent-color);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      font-family: 'Merienda One', cursive;
+    }
+    .subtitle {
+      color: var(--secondary-text);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      font-family: 'Merienda One', cursive;
+    }
+    .menu {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+    .menu-item {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .menu-item:hover, .menu-item.active {
+      color: var(--accent-color);
+    }
+    main {
+      padding: 2rem 0;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 1.5rem;
+    }
+    .sidebar {
+      background-color: var(--panel-bg);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .sidebar-menu {
+      list-style: none;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .sidebar-item:hover {
+      background-color: var(--highlight);
+    }
+    .sidebar-item.active {
+      background-color: var(--highlight);
+      border-left-color: var(--accent-color);
+    }
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background-color: var(--secondary-text);
+    }
+    .sidebar-item.active .indicator {
+      background-color: var(--accent-color);
+    }
+    .status-panel {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: var(--card-bg);
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+    }
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .status-indicator .indicator {
+      background-color: var(--success-color);
+    }
+    .status-text {
+      color: var(--success-color);
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .status-details {
+      font-size: 0.8rem;
+      color: var(--secondary-text);
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .quick-dork-panel {
+      background-color: var(--panel-bg);
+      border-radius: 5px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+    .panel-title {
+      color: var(--accent-color);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-family: 'Merienda One', cursive;
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    }
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--accent-color);
+    }
+    .cyber-input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      font-size: 16px;
+    }
+    .cyber-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
+    }
+    .generate-btn {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+    .generate-btn:hover {
+      background-color: #00d0e0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 240, 255, 0.3);
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: var(--panel-bg);
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .filter-label {
+      color: var(--secondary-text);
+    }
+    .filter-buttons {
+      display: flex;
+    }
+    .filter-btn {
+      background-color: var(--card-bg);
+      border: none;
+      color: var(--text-color);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:first-child {
+      border-radius: 5px 0 0 5px;
+    }
+    .filter-btn:last-child {
+      border-radius: 0 5px 5px 0;
+    }
+    .filter-btn.active {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+    }
+    .refresh-btn {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--accent-color);
+      color: var(--accent-color);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .refresh-btn:hover {
+      background-color: var(--highlight);
+    }
+    .dork-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .dork-category {
+      background-color: var(--card-bg);
+      border-radius: 5px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+    }
+    .category-header {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .category-title {
+      color: var(--accent-color);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .dork-list {
+      list-style: none;
+    }
+    .dork-item {
+      margin-bottom: 0.8rem;
+    }
+    .dork-link {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 0.8rem;
+      background-color: var(--panel-bg);
+      border-radius: 3px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .dork-link:hover {
+      background-color: var(--highlight);
+      color: var(--accent-color);
+    }
+    .dork-icon {
+      margin-right: 0.5rem;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+    }
+    .dork-results {
+      margin-top: 1.5rem;
+      display: none;
+    }
+    .dork-header {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dork-title {
+      font-size: 1.2rem;
+      color: var(--accent-color);
+    }
+    .dork-stats {
+      display: flex;
+      gap: 1rem;
+    }
+    .dork-stat {
+      background-color: var(--card-bg);
+      padding: 0.3rem 0.8rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+    .dork-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .result-category {
+      background-color: var(--card-bg);
+      border-radius: 5px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+    }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .result-title {
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+    .result-count {
+      background-color: var(--panel-bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+    .result-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 0.5rem;
+    }
+    .result-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .result-list::-webkit-scrollbar-track {
+      background: var(--panel-bg);
+      border-radius: 5px;
+    }
+    .result-list::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 5px;
+    }
+    .result-item {
+      margin-bottom: 0.5rem;
+    }
+    .result-link {
+      display: block;
+      padding: 0.7rem;
+      background-color: var(--panel-bg);
+      border-radius: 5px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.9rem;
+      word-break: break-all;
+      transition: all 0.2s;
+    }
+    .result-link:hover {
+      background-color: var(--highlight);
+    }
+    .export-options {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .export-btn {
+      padding: 0.7rem 1.2rem;
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .export-btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Helper sites section and responsive styling omitted for brevity */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <div>
+          <div class="logo">CYBERDORK</div>
+          <div class="subtitle">Advanced Google Dork Generator</div>
+        </div>
+        <ul class="menu">
+          <li class="menu-item active" onclick="switchTab(0)">Home</li>
+          <li class="menu-item" onclick="switchTab(1)">Bug Bounty</li>
+          <li class="menu-item" onclick="switchTab(2)">People Search</li>
+          <li class="menu-item" onclick="switchTab(3)">Helper Tools</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <div class="container">
+      <!-- Quick Dork Generator Panel -->
+      <div class="quick-dork-panel">
+        <div class="panel-title">QUICK DORK GENERATION</div>
+        <div class="input-group">
+          <input type="text" id="quick-target" class="cyber-input" placeholder="Enter domain (e.g., example.com) or name for people search" autofocus>
+          <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="generate-btn" id="quick-bug-bounty-btn">Generate Bug Bounty Dorks</button>
+            <button class="generate-btn" style="background-color: var(--success-color);" id="quick-people-search-btn">Generate People Search Dorks</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="dashboard">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li class="sidebar-item active" onclick="switchTab(0)">
+            <div class="indicator"></div>
+            Dashboard
+          </li>
+          <li class="sidebar-item" onclick="switchTab(1)">
+            <div class="indicator"></div>
+            Bug Bounty Dorks
+          </li>
+          <li class="sidebar-item" onclick="switchTab(2)">
+            <div class="indicator"></div>
+            People Search Dorks
+          </li>
+          <li class="sidebar-item" onclick="switchTab(3)">
+            <div class="indicator"></div>
+            Helper Tools
+          </li>
+          <li class="sidebar-item" onclick="switchTab(4)">
+            <div class="indicator"></div>
+            Settings
+          </li>
+        </ul>
+        
+        <div class="status-panel">
+          <div class="status-indicator">
+            <div class="indicator"></div>
+            <div class="status-text">SYSTEM ONLINE</div>
+          </div>
+        </div>
+        
+        <!-- People Search Tab Content -->
+        <div class="tab-content" id="people-search-tab">
+          <div class="input-group">
+            <div class="input-label">Person Details</div>
+            <input type="text" id="name-input" class="cyber-input" placeholder="Enter full name (e.g., John Smith)" style="margin-bottom: 10px;">
+            <input type="text" id="email-input" class="cyber-input" placeholder="Email (optional)" style="margin-bottom: 10px;">
+            <input type="text" id="location-input" class="cyber-input" placeholder="Location (optional)">
+            <button class="generate-btn" id="generate-people-search" style="background-color: var(--success-color);">Generate People Search Dorks</button>
+          </div>
+          
+          <div class="dork-results" id="people-search-results">
+            <div class="dork-header">
+              <div class="dork-title">People Search Dorks</div>
+              <div class="dork-stats">
+                <div class="dork-stat">Categories: <span id="ps-cat-count">0</span></div>
+                <div class="dork-stat">Total Dorks: <span id="ps-dork-count">0</span></div>
+              </div>
+            </div>
+            
+            <div class="dork-categories" id="people-search-categories">
+              <!-- Populated by JavaScript -->
+            </div>
+            
+            <div class="export-options">
+              <button class="export-btn" id="ps-copy-all">Copy All</button>
+              <button class="export-btn" id="ps-export-txt">Export as TXT</button>
+              <button class="export-btn" id="ps-export-csv">Export as CSV</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Helper Tools Tab Content -->
+        <div class="tab-content" id="helper-tools-tab">
+          <div class="helper-sites">
+            <div class="helper-title">HELPFUL CYBERSECURITY RESOURCES</div>
+            <div class="helper-grid">
+              <a href="https://requestbin.net/" class="helper-link" target="_blank">
+                <span class="helper-icon">🔵</span>
+                DNSBin - The request.bin of DNS!
+              </a>
+              <!-- Additional helper links as per your original code -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="status-details" id="last-update">LAST UPDATE: 00:00:00</div>
+      </div>
+      
+      <div class="content">
+        <!-- Dashboard Tab Content -->
+        <div class="tab-content active" id="dashboard-tab">
+          <div class="controls">
+            <div class="filter-controls">
+              <div class="filter-label">Filter:</div>
+              <div class="filter-buttons">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Security</button>
+                <button class="filter-btn">Leaks</button>
+              </div>
+            </div>
+            <button class="refresh-btn" id="refresh-btn">Refresh</button>
+          </div>
+          
+          <h2 style="margin-bottom: 1rem; color: var(--accent-color);">Bug Bounty Dork Categories</h2>
+          
+          <div class="dork-grid">
+            <!-- Example Category – File Discovery -->
+            <div class="dork-category">
+              <div class="category-header">
+                <div class="category-title">File Discovery</div>
+              </div>
+              <ul class="dork-list">
+                <li class="dork-item">
+                  <a class="dork-link" data-type="1" onclick="google_it(1)">Directory listing vulnerabilities</a>
+                </li>
+                <li class="dork-item">
+                  <a class="dork-link" data-type="2" onclick="google_it(2)">Exposed Configuration files</a>
+                </li>
+                <li class="dork-item">
+                  <a class="dork-link" data-type="3" onclick="google_it(3)">Exposed Database files</a>
+                </li>
+                <li class="dork-item">
+                  <a class="dork-link" data-type="4" onclick="google_it(4)">Exposed log files</a>
+                </li>
+                <li class="dork-item">
+                  <a class="dork-link" data-type="5" onclick="google_it(5)">Backup and old files</a>
+                </li>
+              </ul>
+            </div>
+            <!-- Additional categories (Access Points, Reconnaissance, Vulnerability Types, etc.) go here -->
+          </div>
+          
+          <div class="dork-results" id="quick-results">
+            <div class="dork-header">
+              <div class="dork-title">Generated Dorks</div>
+              <div class="dork-stats">
+                <div class="dork-stat">Category: <span id="quick-category">None</span></div>
+                <div class="dork-stat">Target: <span id="quick-target-display">None</span></div>
+              </div>
+            </div>
+            
+            <div class="dork-categories" id="quick-results-container">
+              <!-- Populated by JavaScript -->
+            </div>
+            
+            <div class="export-options">
+              <button class="export-btn" id="copy-all-btn">Copy All</button>
+              <button class="export-btn" id="export-txt-btn">Export as TXT</button>
+              <button class="export-btn" id="export-csv-btn">Export as CSV</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="container">
+      <div class="logo">CYBERDORK</div>
+      <div style="margin-top: 0.5rem;">Advanced Google Dork Generator for Security Professionals</div>
+    </div>
+  </footer>
+  
+  <script>
+    // ---------------------- Tab Switching ----------------------
+    const tabContents = document.querySelectorAll('.tab-content');
+    const menuItems = document.querySelectorAll('.menu-item');
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    function switchTab(index) {
+      tabContents.forEach(tab => tab.classList.remove('active'));
+      menuItems.forEach(item => item.classList.remove('active'));
+      sidebarItems.forEach(item => item.classList.remove('active'));
+      tabContents[index].classList.add('active');
+      if (menuItems[index]) menuItems[index].classList.add('active');
+      if (sidebarItems[index]) sidebarItems[index].classList.add('active');
+    }
+    
+    // ---------------------- Redirection Function ----------------------
+    // Adapted from your reference, this function constructs the full Google search URL based on the dork type.
+    function google_it(type) {
+      let site = document.getElementById('quick-target').value.trim();
+      if (!site) {
+        alert('Please enter a valid domain in the Quick Dork Generation field.');
+        return;
+      }
+      if (site.indexOf('://') > 0) {
+        site = site.substr(site.indexOf('://') + 3);
+      }
+      let url = 'https://www.google.com/search?q=';
+      url += 'site:' + site;
+      switch(type) {
+        case 1:
+          url += ' +intitle:index.of';
+          break;
+        case 2:
+          url += ' +ext:xml+|+ext:conf+|+ext:cnf+|+ext:reg+|+ext:inf+|+ext:rdp+|+ext:cfg+|+ext:txt+|+ext:ora+|+ext:ini';
+          break;
+        case 3:
+          url += ' +ext:sql+|+ext:dbf+|+ext:mdb';
+          break;
+        case 4:
+          url += ' +ext:log';
+          break;
+        case 5:
+          url += ' +ext:bkf+|+ext:bkp+|+ext:bak+|+ext:old+|+ext:backup';
+          break;
+        case 6:
+          url += ' +inurl:login';
+          break;
+        case 7:
+          url += ' +intext:"sql syntax near"+|+intext:"syntax error has occurred"+|+intext:"incorrect syntax near"+|+intext:"unexpected end of SQL command"+|+intext:"Warning: mysql_connect()"+|+intext:"Warning: mysql_query()"+|+intext:"Warning: pg_connect()"';
+          break;
+        case 8:
+          url += ' +ext:doc+|+ext:docx+|+ext:odt+|+ext:pdf+|+ext:rtf+|+ext:sxw+|+ext:psw+|+ext:ppt+|+ext:pptx+|+ext:pps+|+ext:csv';
+          break;
+        case 9:
+          url += ' +ext:php+intitle:phpinfo+"published by the PHP Group"';
+          break;
+        case 10:
+          url += ' +inurl:wp-+|+inurl:wp-content+|+inurl:plugins+|+inurl:uploads+|+inurl:themes+|+inurl:download';
+          break;
+        case 11:
+          url += ' +inurl:shell+|+inurl:backdoor+|+inurl:wso+|+inurl:cmd+|+shadow+|+passwd+|+boot.ini+|+inurl:backdoor';
+          break;
+        case 12:
+          url += ' +inurl:readme+|+inurl:license+|+inurl:install+|+inurl:setup+|+inurl:config';
+          break;
+        case 13:
+          url += ' +inurl:redir+|+inurl:url+|+inurl:redirect+|+inurl:return+|+inurl:src=http+|+inurl:r=http';
+          break;
+        case 14:
+          url += ' +ext:action+|+ext:struts+|+ext:do';
+          break;
+        case 15:
+          url = 'https://www.google.com/search?q=site:pastebin.com+' + site;
+          break;
+        case 16:
+          url = 'https://www.google.com/search?q=site:linkedin.com+employees+' + site;
+          break;
+        case 17:
+          url += ' +inurl:"/phpinfo.php"+|+inurl:".htaccess"+|+inurl:"/.git" ' + site + ' -github';
+          break;
+        case 18:
+          url = 'https://www.google.com/search?q=site:*.' + site;
+          break;
+        case 19:
+          url = 'https://www.google.com/search?q=site:*.*.' + site;
+          break;
+        case 20:
+          url += ' +inurl:wp-content+|+inurl:wp-includes';
+          break;
+        case 21:
+          url = 'https://github.com/search?q="*.' + site + '"&type=host';
+          break;
+        case 22:
+          url = 'http://' + site + '/crossdomain.xml';
+          break;
+        case 23:
+          url = 'http://threatcrowd.org/domain.php?domain=' + site;
+          break;
+        case 24:
+          url = 'https://www.google.com/search?q=inurl:' + site + '+ext:swf';
+          break;
+        case 25:
+          url = 'https://yandex.com/search/?text=site:' + site + '%20mime:swf';
+          break;
+        case 26:
+          url = 'https://web.archive.org/cdx/search?url=' + site + '/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=urlkey:.*swf&limit=100000&_=1507209148310';
+          break;
+        case 27:
+          url = 'https://web.archive.org/cdx/search?url=' + site + '/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=mimetype:application/x-shockwave-flash&limit=100000&_=1507209148310';
+          break;
+        case 28:
+          url = 'https://web.archive.org/web/*/(' + site + ')';
+          break;
+        case 29:
+          url = 'https://web.archive.org/web/*/' + site + '/*';
+          break;
+        case 30:
+          url = 'https://crt.sh/?q=%25.' + site;
+          break;
+        case 31:
+          url = 'https://www.openbugbounty.org/search/?search=' + site + '&type=host';
+          break;
+        case 32:
+          url = 'https://www.reddit.com/search/?q=' + site + '&source=recent';
+          break;
+        case 33:
+          url = 'http://wwwb-dedup.us.archive.org:8083/cdx/search?url=' + site + '/&matchType=domain&collapse=digest&output=text&fl=original,timestamp&filter=urlkey:.*wp[-].*&limit=1000000&xx=';
+          break;
+        case 34:
+          url = 'https://censys.io/ipv4?q=' + site;
+          break;
+        case 35:
+          url = 'https://censys.io/domain?q=' + site;
+          break;
+        case 36:
+          url = 'https://censys.io/certificates?q=' + site;
+          break;
+        case 37:
+          url = 'https://www.shodan.io/search?query=' + site;
+          break;
+        default:
+          alert('Invalid dork type.');
+          return;
+      }
+      window.open(url, '_blank');
+    }
+    
+    // ---------------------- Quick Dork Generation ----------------------
+    document.getElementById('quick-bug-bounty-btn').addEventListener('click', function() {
+      const domain = document.getElementById('quick-target').value.trim();
+      if (!domain) { alert('Please enter a valid domain'); return; }
+      const typesToUse = [1, 2, 3, 10, 18];
+      const resultsContainer = document.getElementById('quick-results-container');
+      resultsContainer.innerHTML = '';
+      document.getElementById('quick-category').textContent = 'Bug Bounty';
+      document.getElementById('quick-target-display').textContent = domain;
+      const dorks = { 'Key Dorks': [] };
+      typesToUse.forEach(type => {
+        const dork = generateDork(type, domain);
+        if (dork) { dorks['Key Dorks'].push(dork); }
+      });
+      dorks['Key Dorks'].forEach(d => {
+        const a = document.createElement('a');
+        a.className = 'result-link';
+        a.textContent = d.name;
+        a.onclick = function() { google_it(d.type); };
+        resultsContainer.appendChild(a);
+      });
+      document.getElementById('quick-results').style.display = 'block';
+      updateLastUpdate();
+    });
+    
+    document.getElementById('quick-people-search-btn').addEventListener('click', function() {
+      const name = document.getElementById('quick-target').value.trim();
+      if (!name) { alert('Please enter a name'); return; }
+      const resultsContainer = document.getElementById('quick-results-container');
+      resultsContainer.innerHTML = '';
+      document.getElementById('quick-category').textContent = 'People Search';
+      document.getElementById('quick-target-display').textContent = name;
+      const dorks = {
+        'Key People Search': [
+          {
+            query: `"${name}" (email OR contact) -template`,
+            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" (email OR contact) -template`)}`
+          },
+          {
+            query: `"${name}" intext:@gmail.com OR intext:@yahoo.com`,
+            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" intext:@gmail.com OR intext:@yahoo.com`)}`
+          },
+          {
+            query: `site:linkedin.com/in/ "${name}"`,
+            url: `https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in/ "${name}"`)}`
+          },
+          {
+            query: `"${name}" (resume OR CV) filetype:pdf`,
+            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" (resume OR CV) filetype:pdf`)}`
+          },
+          {
+            query: `site:facebook.com "${name}"`,
+            url: `https://www.google.com/search?q=${encodeURIComponent(`site:facebook.com "${name}"`)}`
+          }
+        ]
+      };
+      const categoryEl = createCategoryElement('Key People Search Dorks', dorks['Key People Search']);
+      resultsContainer.appendChild(categoryEl);
+      document.getElementById('quick-results').style.display = 'block';
+      updateLastUpdate();
+    });
+    
+    // ---------------------- Utility Functions ----------------------
+    function generateDork(type, domain) {
+      if (!domain) return null;
+      domain = domain.replace(/https?:\/\//, '').replace(/\/.*$/, '');
+      if (dorkTypes[type]) {
+        const query = dorkTypes[type].query.replace(/{domain}/g, domain);
+        const url = query.startsWith('http') ? query : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        return { name: dorkTypes[type].name, query, url, type };
+      }
+      return null;
+    }
+    
+    function createCategoryElement(title, dorks) {
+      const categoryEl = document.createElement('div');
+      categoryEl.className = 'result-category';
+      
+      const headerEl = document.createElement('div');
+      headerEl.className = 'result-header';
+      
+      const titleEl = document.createElement('div');
+      titleEl.className = 'result-title';
+      titleEl.textContent = title;
+      
+      const countEl = document.createElement('div');
+      countEl.className = 'result-count';
+      countEl.textContent = dorks.length;
+      
+      headerEl.appendChild(titleEl);
+      headerEl.appendChild(countEl);
+      
+      const listEl = document.createElement('div');
+      listEl.className = 'result-list';
+      
+      dorks.forEach(dork => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'result-item';
+        
+        const linkEl = document.createElement('a');
+        linkEl.className = 'result-link';
+        linkEl.href = dork.url;
+        linkEl.textContent = dork.query;
+        linkEl.target = '_blank';
+        
+        itemEl.appendChild(linkEl);
+        listEl.appendChild(itemEl);
+      });
+      
+      categoryEl.appendChild(headerEl);
+      categoryEl.appendChild(listEl);
+      
+      return categoryEl;
+    }
+    
+    function getAllDorks(containerId) {
+      const links = document.querySelectorAll(`#${containerId} .result-link`);
+      const dorks = [];
+      links.forEach(link => { dorks.push(link.textContent); });
+      return dorks;
+    }
+    
+    function copyToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('Copied to clipboard!');
+    }
+    
+    function downloadFile(content, filename, contentType) {
+      const a = document.createElement('a');
+      const file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file);
+      a.download = filename;
+      a.click();
+    }
+    
+    function updateLastUpdate() {
+      const now = new Date();
+      const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+      document.getElementById('last-update').textContent = `LAST UPDATE: ${timeString}`;
+    }
+    
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+      updateLastUpdate();
+      alert('Dashboard refreshed!');
+    });
+    updateLastUpdate();
+    
+    // ---------------------- Background Canvas Effect ----------------------
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        this.color = `rgba(0, ${Math.floor(Math.random() * 150 + 100)}, ${Math.floor(Math.random() * 150 + 100)}, ${Math.random() * 0.3 + 0.2})`;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+        if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    function init() {
+      particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push(new Particle());
+      }
+    }
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => { particle.update(); particle.draw(); });
+      particles.forEach(particleA => {
+        particles.forEach(particleB => {
+          const dx = particleA.x - particleB.x;
+          const dy = particleA.y - particleB.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 - (distance / 1000)})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particleA.x, particleA.y);
+            ctx.lineTo(particleB.x, particleB.y);
+            ctx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(animate);
+    }
+    window.addEventListener('resize', function() {
+      resizeCanvas();
+      init();
+    });
+    resizeCanvas();
+    init();
+    animate();
+    
+    // ---------------------- Dork Types for Quick Generation ----------------------
+    const dorkTypes = {
+      1: { name: "Directory listing vulnerabilities", query: "site:{domain} intitle:index.of" },
+      2: { name: "Exposed Configuration files", query: "site:{domain} ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini" },
+      3: { name: "Exposed Database files", query: "site:{domain} ext:sql | ext:dbf | ext:mdb" },
+      4: { name: "Exposed log files", query: "site:{domain} ext:log" },
+      5: { name: "Backup and old files", query: "site:{domain} ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup" },
+      6: { name: "Login pages", query: "site:{domain} inurl:login" },
+      7: { name: "SQL errors", query: "site:{domain} intext:\"sql syntax near\" | intext:\"syntax error has occurred\" | intext:\"incorrect syntax near\" | intext:\"unexpected end of SQL command\" | intext:\"Warning: mysql_connect()\" | intext:\"Warning: mysql_query()\" | intext:\"Warning: pg_connect()\"" },
+      8: { name: "Publicly exposed documents", query: "site:{domain} ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw | ext:ppt | ext:pptx | ext:pps | ext:csv" },
+      9: { name: "phpinfo()", query: "site:{domain} ext:php intitle:phpinfo \"published by the PHP Group\"" },
+      10: { name: "Find WordPress", query: "site:{domain} inurl:wp- | inurl:wp-content | inurl:plugins | inurl:uploads | inurl:themes | inurl:download" },
+      11: { name: "Finding Backdoors", query: "site:{domain} inurl:shell | inurl:backdoor | inurl:wso | inurl:cmd | shadow | passwd | boot.ini | inurl:backdoor" },
+      12: { name: "Install / Setup files", query: "site:{domain} inurl:readme | inurl:license | inurl:install | inurl:setup | inurl:config" },
+      13: { name: "Open Redirects", query: "site:{domain} inurl:redir | inurl:url | inurl:redirect | inurl:return | inurl:src=http | inurl:r=http" },
+      14: { name: "Apache STRUTS RCE", query: "site:{domain} ext:action | ext:struts | ext:do" },
+      15: { name: "Find Pastebin entries", query: "site:pastebin.com {domain}" },
+      16: { name: "Employees on LINKEDIN", query: "site:linkedin.com employees {domain}" },
+      17: { name: ".htaccess sensitive files", query: "site:{domain} inurl:\"/phpinfo.php\" | inurl:\".htaccess\" | inurl:\"/.git\" {domain} -github" },
+      18: { name: "Find Subdomains", query: "site:*.{domain}" },
+      19: { name: "Find Sub-Subdomains", query: "site:*.*.{domain}" },
+      20: { name: "Find WordPress #2", query: "site:{domain} inurl:wp-content | inurl:wp-includes" },
+      21: { name: "Search in GITHUB", query: "https://github.com/search?q=\"*.{domain}\"&type=host" },
+      22: { name: "Test CrossDomain", query: "http://{domain}/crossdomain.xml" },
+      23: { name: "Check in ThreatCrowd", query: "http://threatcrowd.org/domain.php?domain={domain}" },
+      24: { name: "Find .SWF file (Google)", query: "site:{domain} ext:swf" },
+      25: { name: "Find .SWF file (Yandex)", query: "site:{domain} mime:swf site:yandex.com" },
+      26: { name: "Search SWF in WayBack Machine", query: "https://web.archive.org/cdx/search?url={domain}/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=urlkey:.*swf&limit=100000&_=1507209148310" },
+      27: { name: "Search in WayBack Machine #2", query: "https://web.archive.org/cdx/search?url={domain}/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=mimetype:application/x-shockwave-flash&limit=100000&_=1507209148310" },
+      28: { name: "Search in WayBack Machine #3", query: "https://web.archive.org/web/*/(. {domain})" },
+      29: { name: "Search in WayBack Machine [List/All]", query: "https://web.archive.org/web/*/{domain}/*" },
+      30: { name: "Check in crt.sh", query: "https://crt.sh/?q=%25.{domain}" },
+      31: { name: "Search in OpenBugBounty", query: "https://www.openbugbounty.org/search/?search={domain}&type=host" },
+      32: { name: "Search in Reddit", query: "https://www.reddit.com/search/?q={domain}&source=recent" },
+      33: { name: "Find WordPress [Wayback Machine]", query: "http://wwwb-dedup.us.archive.org:8083/cdx/search?url={domain}/&matchType=domain&collapse=digest&output=text&fl=original,timestamp&filter=urlkey:.*wp[-].*&limit=1000000&xx=" },
+      34: { name: "Check in CENSYS [IP]", query: "https://censys.io/ipv4?q={domain}" },
+      35: { name: "Check in CENSYS [Domains]", query: "https://censys.io/domain?q={domain}" },
+      36: { name: "Check in CENSYS [Certificates]", query: "https://censys.io/certificates?q={domain}" },
+      37: { name: "Search in SHODAN", query: "https://www.shodan.io/search?query={domain}" }
+    };
+  </script>
+</body>
+</html>
