@@ -6,7 +6,6 @@
   <title>CyberDork - Advanced Google Dork Generator</title>
   <link href="https://fonts.googleapis.com/css?family=Merienda+One" rel="stylesheet" type="text/css">
   <style>
-    /* Your original CSS styling */
     :root {
       --bg-color: #0a0e17;
       --panel-bg: #131c2c;
@@ -257,8 +256,9 @@
     }
     .dork-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
+      margin-bottom: 1.5rem;
     }
     .dork-category {
       background-color: var(--card-bg);
@@ -278,6 +278,19 @@
     }
     .dork-list {
       list-style: none;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .dork-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .dork-list::-webkit-scrollbar-track {
+      background: var(--panel-bg);
+      border-radius: 5px;
+    }
+    .dork-list::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 5px;
     }
     .dork-item {
       margin-bottom: 0.8rem;
@@ -296,11 +309,6 @@
     .dork-link:hover {
       background-color: var(--highlight);
       color: var(--accent-color);
-    }
-    .dork-icon {
-      margin-right: 0.5rem;
-      color: var(--accent-color);
-      font-size: 1.2rem;
     }
     .dork-results {
       margin-top: 1.5rem;
@@ -415,7 +423,16 @@
     .tab-content.active {
       display: block;
     }
-    /* Helper sites section and responsive styling omitted for brevity */
+    footer {
+      background-color: var(--panel-bg);
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--accent-color);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      margin-top: 2rem;
+    }
+    footer .container {
+      text-align: center;
+    }
     canvas {
       position: fixed;
       top: 0;
@@ -423,6 +440,17 @@
       width: 100%;
       height: 100%;
       z-index: -1;
+    }
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      .dork-grid {
+        grid-template-columns: 1fr;
+      }
+      .menu {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -437,10 +465,10 @@
           <div class="subtitle">Advanced Google Dork Generator</div>
         </div>
         <ul class="menu">
-          <li class="menu-item active" onclick="switchTab(0)">Home</li>
-          <li class="menu-item" onclick="switchTab(1)">Bug Bounty</li>
-          <li class="menu-item" onclick="switchTab(2)">People Search</li>
-          <li class="menu-item" onclick="switchTab(3)">Helper Tools</li>
+          <li class="menu-item active">Home</li>
+          <li class="menu-item">Bug Bounty</li>
+          <li class="menu-item">People Search</li>
+          <li class="menu-item">Helper Tools</li>
         </ul>
       </div>
     </div>
@@ -459,149 +487,169 @@
           </div>
         </div>
       </div>
-    </div>
-    
-    <div class="dashboard">
-      <div class="sidebar">
-        <ul class="sidebar-menu">
-          <li class="sidebar-item active" onclick="switchTab(0)">
-            <div class="indicator"></div>
-            Dashboard
-          </li>
-          <li class="sidebar-item" onclick="switchTab(1)">
-            <div class="indicator"></div>
-            Bug Bounty Dorks
-          </li>
-          <li class="sidebar-item" onclick="switchTab(2)">
-            <div class="indicator"></div>
-            People Search Dorks
-          </li>
-          <li class="sidebar-item" onclick="switchTab(3)">
-            <div class="indicator"></div>
-            Helper Tools
-          </li>
-          <li class="sidebar-item" onclick="switchTab(4)">
-            <div class="indicator"></div>
-            Settings
-          </li>
-        </ul>
-        
-        <div class="status-panel">
-          <div class="status-indicator">
-            <div class="indicator"></div>
-            <div class="status-text">SYSTEM ONLINE</div>
-          </div>
-        </div>
-        
-        <!-- People Search Tab Content -->
-        <div class="tab-content" id="people-search-tab">
-          <div class="input-group">
-            <div class="input-label">Person Details</div>
-            <input type="text" id="name-input" class="cyber-input" placeholder="Enter full name (e.g., John Smith)" style="margin-bottom: 10px;">
-            <input type="text" id="email-input" class="cyber-input" placeholder="Email (optional)" style="margin-bottom: 10px;">
-            <input type="text" id="location-input" class="cyber-input" placeholder="Location (optional)">
-            <button class="generate-btn" id="generate-people-search" style="background-color: var(--success-color);">Generate People Search Dorks</button>
-          </div>
-          
-          <div class="dork-results" id="people-search-results">
-            <div class="dork-header">
-              <div class="dork-title">People Search Dorks</div>
-              <div class="dork-stats">
-                <div class="dork-stat">Categories: <span id="ps-cat-count">0</span></div>
-                <div class="dork-stat">Total Dorks: <span id="ps-dork-count">0</span></div>
-              </div>
-            </div>
-            
-            <div class="dork-categories" id="people-search-categories">
-              <!-- Populated by JavaScript -->
-            </div>
-            
-            <div class="export-options">
-              <button class="export-btn" id="ps-copy-all">Copy All</button>
-              <button class="export-btn" id="ps-export-txt">Export as TXT</button>
-              <button class="export-btn" id="ps-export-csv">Export as CSV</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Helper Tools Tab Content -->
-        <div class="tab-content" id="helper-tools-tab">
-          <div class="helper-sites">
-            <div class="helper-title">HELPFUL CYBERSECURITY RESOURCES</div>
-            <div class="helper-grid">
-              <a href="https://requestbin.net/" class="helper-link" target="_blank">
-                <span class="helper-icon">🔵</span>
-                DNSBin - The request.bin of DNS!
-              </a>
-              <!-- Additional helper links as per your original code -->
-            </div>
-          </div>
-        </div>
-        
-        <div class="status-details" id="last-update">LAST UPDATE: 00:00:00</div>
-      </div>
       
-      <div class="content">
-        <!-- Dashboard Tab Content -->
-        <div class="tab-content active" id="dashboard-tab">
-          <div class="controls">
-            <div class="filter-controls">
-              <div class="filter-label">Filter:</div>
-              <div class="filter-buttons">
-                <button class="filter-btn active">All</button>
-                <button class="filter-btn">Security</button>
-                <button class="filter-btn">Leaks</button>
-              </div>
+      <div class="dashboard">
+        <div class="sidebar">
+          <ul class="sidebar-menu">
+            <li class="sidebar-item active" data-tab="dashboard-tab">
+              <div class="indicator"></div>
+              Dashboard
+            </li>
+            <li class="sidebar-item" data-tab="bug-bounty-tab">
+              <div class="indicator"></div>
+              Bug Bounty Dorks
+            </li>
+            <li class="sidebar-item" data-tab="people-search-tab">
+              <div class="indicator"></div>
+              People Search Dorks
+            </li>
+            <li class="sidebar-item" data-tab="helper-tools-tab">
+              <div class="indicator"></div>
+              Helper Tools
+            </li>
+          </ul>
+          
+          <div class="status-panel">
+            <div class="status-indicator">
+              <div class="indicator"></div>
+              <div class="status-text">SYSTEM ONLINE</div>
             </div>
-            <button class="refresh-btn" id="refresh-btn">Refresh</button>
+            <div class="status-details" id="last-update">LAST UPDATE: 00:00:00</div>
           </div>
-          
-          <h2 style="margin-bottom: 1rem; color: var(--accent-color);">Bug Bounty Dork Categories</h2>
-          
-          <div class="dork-grid">
-            <!-- Example Category – File Discovery -->
-            <div class="dork-category">
-              <div class="category-header">
-                <div class="category-title">File Discovery</div>
+        </div>
+        
+        <div class="content">
+          <!-- Dashboard Tab Content -->
+          <div class="tab-content active" id="dashboard-tab">
+            <div class="controls">
+              <div class="filter-controls">
+                <div class="filter-label">Filter:</div>
+                <div class="filter-buttons">
+                  <button class="filter-btn active" onclick="filterCategories('all')">All</button>
+                  <button class="filter-btn" onclick="filterCategories('security')">Security</button>
+                  <button class="filter-btn" onclick="filterCategories('recon')">Recon</button>
+                </div>
               </div>
-              <ul class="dork-list">
-                <li class="dork-item">
-                  <a class="dork-link" data-type="1" onclick="google_it(1)">Directory listing vulnerabilities</a>
-                </li>
-                <li class="dork-item">
-                  <a class="dork-link" data-type="2" onclick="google_it(2)">Exposed Configuration files</a>
-                </li>
-                <li class="dork-item">
-                  <a class="dork-link" data-type="3" onclick="google_it(3)">Exposed Database files</a>
-                </li>
-                <li class="dork-item">
-                  <a class="dork-link" data-type="4" onclick="google_it(4)">Exposed log files</a>
-                </li>
-                <li class="dork-item">
-                  <a class="dork-link" data-type="5" onclick="google_it(5)">Backup and old files</a>
-                </li>
-              </ul>
-            </div>
-            <!-- Additional categories (Access Points, Reconnaissance, Vulnerability Types, etc.) go here -->
-          </div>
-          
-          <div class="dork-results" id="quick-results">
-            <div class="dork-header">
-              <div class="dork-title">Generated Dorks</div>
-              <div class="dork-stats">
-                <div class="dork-stat">Category: <span id="quick-category">None</span></div>
-                <div class="dork-stat">Target: <span id="quick-target-display">None</span></div>
-              </div>
+              <button class="refresh-btn" id="refresh-btn">Refresh</button>
             </div>
             
-            <div class="dork-categories" id="quick-results-container">
-              <!-- Populated by JavaScript -->
+            <h2 style="margin-bottom: 1rem; color: var(--accent-color);">Bug Bounty Dork Categories</h2>
+            
+            <div class="dork-grid" id="dashboard-categories">
+              <!-- Categories will be populated by JavaScript -->
             </div>
             
-            <div class="export-options">
-              <button class="export-btn" id="copy-all-btn">Copy All</button>
-              <button class="export-btn" id="export-txt-btn">Export as TXT</button>
-              <button class="export-btn" id="export-csv-btn">Export as CSV</button>
+            <div class="dork-results" id="quick-results">
+              <div class="dork-header">
+                <div class="dork-title">Generated Dorks</div>
+                <div class="dork-stats">
+                  <div class="dork-stat">Category: <span id="quick-category">None</span></div>
+                  <div class="dork-stat">Target: <span id="quick-target-display">None</span></div>
+                </div>
+              </div>
+              
+              <div class="dork-categories" id="quick-results-container">
+                <!-- Populated by JavaScript -->
+              </div>
+              
+              <div class="export-options">
+                <button class="export-btn" id="copy-all-btn">Copy All</button>
+                <button class="export-btn" id="export-txt-btn">Export as TXT</button>
+                <button class="export-btn" id="export-csv-btn">Export as CSV</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Bug Bounty Tab Content -->
+          <div class="tab-content" id="bug-bounty-tab">
+            <div class="input-group">
+              <label class="input-label">Domain Target</label>
+              <input type="text" id="bug-bounty-domain" class="cyber-input" placeholder="Enter valid domain (e.g., example.com)">
+              <button class="generate-btn" id="generate-bug-bounty">Generate Bug Bounty Dorks</button>
+            </div>
+            
+            <div class="dork-results" id="bug-bounty-results">
+              <div class="dork-header">
+                <div class="dork-title">Bug Bounty Dorks</div>
+                <div class="dork-stats">
+                  <div class="dork-stat">Categories: <span id="bb-cat-count">0</span></div>
+                  <div class="dork-stat">Total Dorks: <span id="bb-dork-count">0</span></div>
+                </div>
+              </div>
+              
+              <div class="dork-categories" id="bug-bounty-categories">
+                <!-- Populated by JavaScript -->
+              </div>
+              
+              <div class="export-options">
+                <button class="export-btn" id="bb-copy-all">Copy All</button>
+                <button class="export-btn" id="bb-export-txt">Export as TXT</button>
+                <button class="export-btn" id="bb-export-csv">Export as CSV</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- People Search Tab Content -->
+          <div class="tab-content" id="people-search-tab">
+            <div class="input-group">
+              <label class="input-label">Person Details</label>
+              <input type="text" id="name-input" class="cyber-input" placeholder="Enter full name (e.g., John Smith)" style="margin-bottom: 10px;">
+              <input type="text" id="email-input" class="cyber-input" placeholder="Email (optional)" style="margin-bottom: 10px;">
+              <input type="text" id="location-input" class="cyber-input" placeholder="Location (optional)">
+              <button class="generate-btn" id="generate-people-search" style="background-color: var(--success-color);">Generate People Search Dorks</button>
+            </div>
+            
+            <div class="dork-results" id="people-search-results">
+              <div class="dork-header">
+                <div class="dork-title">People Search Dorks</div>
+                <div class="dork-stats">
+                  <div class="dork-stat">Categories: <span id="ps-cat-count">0</span></div>
+                  <div class="dork-stat">Total Dorks: <span id="ps-dork-count">0</span></div>
+                </div>
+              </div>
+              
+              <div class="dork-categories" id="people-search-categories">
+                <!-- Populated by JavaScript -->
+              </div>
+              
+              <div class="export-options">
+                <button class="export-btn" id="ps-copy-all">Copy All</button>
+                <button class="export-btn" id="ps-export-txt">Export as TXT</button>
+                <button class="export-btn" id="ps-export-csv">Export as CSV</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Helper Tools Tab Content -->
+          <div class="tab-content" id="helper-tools-tab">
+            <div style="background-color: var(--panel-bg); border-radius: 5px; padding: 1.5rem; border: 1px solid var(--border-color);">
+              <h2 style="margin-bottom: 1rem; color: var(--accent-color); text-align: center;">HELPFUL CYBERSECURITY RESOURCES</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                <a href="https://requestbin.net/" class="result-link" target="_blank">
+                  🔍 DNSBin - The request.bin of DNS!
+                </a>
+                <a href="https://www.shodan.io/" class="result-link" target="_blank">
+                  🔍 Shodan - Search Engine for Internet-Connected Devices
+                </a>
+                <a href="https://censys.io/" class="result-link" target="_blank">
+                  🔍 Censys - Internet Security and Data Analytics
+                </a>
+                <a href="https://crt.sh/" class="result-link" target="_blank">
+                  🔍 Certificate Search - crt.sh
+                </a>
+                <a href="https://securitytrails.com/" class="result-link" target="_blank">
+                  🔍 SecurityTrails - DNS & Domain Intelligence
+                </a>
+                <a href="https://github.com/OWASP/CheatSheetSeries" class="result-link" target="_blank">
+                  📚 OWASP Cheat Sheet Series
+                </a>
+                <a href="https://bugcrowd.com/programs" class="result-link" target="_blank">
+                  🐛 Bugcrowd - Bug Bounty Programs
+                </a>
+                <a href="https://hackerone.com/directory/programs" class="result-link" target="_blank">
+                  🐛 HackerOne - Bug Bounty Programs
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -617,270 +665,621 @@
   </footer>
   
   <script>
-    // ---------------------- Tab Switching ----------------------
-    const tabContents = document.querySelectorAll('.tab-content');
-    const menuItems = document.querySelectorAll('.menu-item');
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
-    function switchTab(index) {
-      tabContents.forEach(tab => tab.classList.remove('active'));
-      menuItems.forEach(item => item.classList.remove('active'));
-      sidebarItems.forEach(item => item.classList.remove('active'));
-      tabContents[index].classList.add('active');
-      if (menuItems[index]) menuItems[index].classList.add('active');
-      if (sidebarItems[index]) sidebarItems[index].classList.add('active');
+    // -------------------- Data Objects for Dork Types --------------------
+    // Bug Bounty Dorks from first file
+    const bugBountyDorks = {
+      "File Types": [
+        "site:{domain} filetype:pdf",
+        "site:{domain} filetype:doc",
+        "site:{domain} filetype:docx",
+        "site:{domain} filetype:xls",
+        "site:{domain} filetype:xlsx",
+        "site:{domain} filetype:ppt",
+        "site:{domain} filetype:pptx",
+        "site:{domain} filetype:txt",
+        "site:{domain} filetype:csv",
+        "site:{domain} filetype:zip",
+        "site:{domain} filetype:tar",
+        "site:{domain} filetype:gz",
+        "site:{domain} filetype:sql",
+        "site:{domain} filetype:bak"
+      ],
+      "Admin Panels": [
+        "site:{domain} inurl:admin",
+        "site:{domain} inurl:login",
+        "site:{domain} inurl:dashboard",
+        "site:{domain} inurl:wp-admin",
+        "site:{domain} inurl:controlpanel"
+      ],
+      "Sensitive Info": [
+        "site:{domain} \"password\"",
+        "site:{domain} \"config\"",
+        "site:{domain} \"credentials\"",
+        "site:{domain} \"secret\"",
+        "site:{domain} \"api_key\""
+      ],
+      "Directory Listing": [
+        "site:{domain} intitle:\"index of\"",
+        "site:{domain} inurl:ftp",
+        "site:{domain} inurl:uploads"
+      ],
+      "Exposed Configuration Files": [
+        "site:{domain} \"config.php\"",
+        "site:{domain} \"settings.py\"",
+        "site:{domain} \"database.yml\"",
+        "site:{domain} \"web.config\""
+      ],
+      "Exposed Database Files": [
+        "site:{domain} \"database.sql\"",
+        "site:{domain} \"db_backup.zip\"",
+        "site:{domain} \"backup.sql\""
+      ],
+      "Find WordPress": [
+        "site:{domain} inurl:wp-admin",
+        "site:{domain} inurl:wp-content",
+        "site:{domain} inurl:wp-includes"
+      ],
+      "Exposed Log Files": [
+        "site:{domain} \"error.log\"",
+        "site:{domain} \"access.log\"",
+        "site:{domain} \"logs\""
+      ],
+      "Backup and Old Files": [
+        "site:{domain} \"backup.zip\"",
+        "site:{domain} \"old_version.tar.gz\"",
+        "site:{domain} \"previous_version.tar\""
+      ],
+      "Login Pages": [
+        "site:{domain} inurl:login",
+        "site:{domain} inurl:signin",
+        "site:{domain} inurl:authenticate"
+      ],
+      "SQL Errors": [
+        "site:{domain} \"You have an error in your SQL syntax\"",
+        "site:{domain} \"Warning: mysql_connect()\""
+      ],
+      "Publicly Exposed Documents": [
+        "site:{domain} filetype:docx",
+        "site:{domain} filetype:xlsx",
+        "site:{domain} filetype:pdf",
+        "site:{domain} filetype:pptx"
+      ],
+      "phpinfo()": [
+        "site:{domain} \"phpinfo()\""
+      ],
+      "Finding Backdoors": [
+        "site:{domain} \"backdoor\"",
+        "site:{domain} \"shell.php\""
+      ],
+      "Install / Setup Files": [
+        "site:{domain} \"setup.php\"",
+        "site:{domain} \"install.php\"",
+        "site:{domain} \"install/index.php\""
+      ],
+      "Open Redirects": [
+        "site:{domain} inurl:redirect"
+      ],
+      "Apache STRUTS RCE": [
+        "site:{domain} \"struts.action\""
+      ],
+      "Find Pastebin Entries": [
+        "site:pastebin.com {domain}"
+      ],
+      "Employees on LINKEDIN": [
+        "site:linkedin.com/in {domain}"
+      ],
+      ".htaccess Sensitive Files": [
+        "site:{domain} \"htaccess\""
+      ],
+      "Find Subdomains": [
+        "site:*.{domain}"
+      ],
+      "Find Sub-Subdomains": [
+        "site:*.*.{domain}"
+      ],
+      "Find WordPress #2": [
+        "site:{domain} inurl:wp-json"
+      ],
+      "Find WordPress [Wayback Machine]": [
+        "site:archive.org/web/{domain}"
+      ],
+      "Search in GITHUB": [
+        "site:github.com {domain}"
+      ],
+      "Search in OpenBugBounty": [
+        "site:openbugbounty.org {domain}"
+      ],
+      "Search in Reddit": [
+        "site:reddit.com {domain}"
+      ],
+      "Test CrossDomain": [
+        "site:{domain} \"crossdomain.xml\""
+      ],
+      "Check in ThreatCrowd": [
+        "site:threatcrowd.org {domain}"
+      ],
+      "Find .SWF file (Google)": [
+        "site:{domain} filetype:swf"
+      ],
+      "Find .SWF file (Yandex)": [
+        "site:{domain} filetype:swf site:yandex.com"
+      ],
+      "Search SWF in WayBack Machine": [
+        "site:archive.org/web filetype:swf {domain}"
+      ],
+      "Search in WayBack Machine #2": [
+        "site:archive.org/web/ {domain}"
+      ],
+      "Search in WayBack Machine #3": [
+        "site:archive.org/web/{domain} /*"
+      ],
+      "Search in WayBack Machine [List/All]": [
+        "site:archive.org/web/{domain} "
+      ],
+      "Check in crt.sh": [
+        "https://crt.sh/?q=%25.{domain}"
+      ],
+      "Check in CENSYS": [
+        "site:censys.io {domain}"
+      ],
+      "Search in SHODAN": [
+        "site:shodan.io {domain}"
+      ],
+      "PHP Extension w/ Parameters": [
+        "site:{domain} ext:php inurl:?"
+      ],
+      "API Endpoints": [
+        "site:{domain} inurl:api | site:*/rest | site:*/v1 | site:*/v2 | site:*/v3"
+      ],
+      "Juicy Extensions": [
+        "site:\"{domain}\" ext:log | ext:txt | ext:conf | ext:cnf | ext:ini | ext:env | ext:sh | ext:bak | ext:backup | ext:swp | ext:old | ext:~ | ext:git | ext:svn | ext:htpasswd | ext:htaccess | ext:json"
+      ],
+      "High % inurl Keywords": [
+        "inurl:conf | inurl:env | inurl:cgi | inurl:bin | inurl:etc | inurl:root | inurl:sql | inurl:backup | inurl:admin | inurl:php site:{domain}"
+      ],
+      "Server Errors": [
+        "inurl:\"error\" | intitle:\"exception\" | intitle:\"failure\" | intitle:\"server at\" | inurl:exception | \"database error\" | \"SQL syntax\" | \"undefined index\" | \"unhandled exception\" | \"stack trace\" site:{domain}"
+      ],
+      "XSS Prone Parameters": [
+        "inurl:q= | inurl:s= | inurl:search= | inurl:query= | inurl:keyword= | inurl:lang= inurl:& site:{domain}"
+      ],
+      "Open Redirect Prone Parameters": [
+        "inurl:url= | inurl:return= | inurl:next= | inurl:redirect= | inurl:redir= | inurl:ret= | inurl:r2= | inurl:page= inurl:& inurl:http site:{domain}"
+      ],
+      "SQLi Prone Parameters": [
+        "inurl:id= | inurl:pid= | inurl:category= | inurl:cat= | inurl:action= | inurl:sid= | inurl:dir= inurl:& site:{domain}"
+      ],
+      "SSRF Prone Parameters": [
+        "inurl:http | inurl:url= | inurl:path= | inurl:dest= | inurl:html= | inurl:data= | inurl:domain= | inurl:page= inurl:& site:{domain}"
+      ],
+      "LFI Prone Parameters": [
+        "inurl:include | inurl:dir | inurl:detail= | inurl:file= | inurl:folder= | inurl:inc= | inurl:locate= | inurl:doc= | inurl:conf= inurl:& site:{domain}"
+      ],
+      "RCE Prone Parameters": [
+        "inurl:cmd | inurl:exec= | inurl:query= | inurl:code= | inurl:do= | inurl:run= | inurl:read= | inurl:ping= inurl:& site:{domain}"
+      ],
+      "File Upload Endpoints": [
+        "site:{domain} \"choose file\""
+      ],
+      "API Docs": [
+        "inurl:apidocs | inurl:api-docs | inurl:swagger | inurl:api-explorer site:\"{domain}\""
+      ],
+      "Login Pages": [
+        "inurl:login | inurl:signin | intitle:login | intitle:signin | inurl:secure site:{domain}"
+      ],
+      "Test Environments": [
+        "inurl:test | inurl:env | inurl:dev | inurl:staging | inurl:sandbox | inurl:debug | inurl:temp | inurl:internal | inurl:demo site:{domain}"
+      ],
+      "Sensitive Documents": [
+        "site:{domain} ext:txt | ext:pdf | ext:xml | ext:xls | ext:xlsx | ext:ppt | ext:pptx | ext:doc | ext:docx",
+        "intext:\"confidential\" | intext:\"Not for Public Release\" | intext:\"internal use only\" | intext:\"do not distribute\""
+      ],
+      "Sensitive Parameters": [
+        "inurl:email= | inurl:phone= | inurl:password= | inurl:secret= inurl:& site:{domain}"
+      ],
+      "Adobe Experience Manager (AEM)": [
+        "inurl:/content/usergenerated | inurl:/content/dam | inurl:/jcr:content | inurl:/libs/granite | inurl:/etc/clientlibs | inurl:/content/geometrixx | inurl:/bin/wcm | inurl:/crx/de site:{domain}"
+      ],
+      "Disclosed XSS and Open Redirects": [
+        "site:openbugbounty.org inurl:reports intext:\"{domain}\""
+      ],
+      "Google Groups": [
+        "site:groups.google.com \"{domain}\""
+      ],
+      "Code Leaks": [
+        "site:pastebin.com \"{domain}\"",
+        "site:jsfiddle.net \"{domain}\"",
+        "site:codebeautify.org \"{domain}\"",
+        "site:codepen.io \"{domain}\""
+      ],
+      "Cloud Storage": [
+        "site:s3.amazonaws.com \"{domain}\"",
+        "site:blob.core.windows.net \"{domain}\"",
+        "site:googleapis.com \"{domain}\"",
+        "site:drive.google.com \"{domain}\"",
+        "site:dev.azure.com \"{domain}\"",
+        "site:onedrive.live.com \"{domain}\"",
+        "site:digitaloceanspaces.com \"{domain}\"",
+        "site:sharepoint.com \"{domain}\"",
+        "site:s3-external-1.amazonaws.com \"{domain}\"",
+        "site:s3.dualstack.us-east-1.amazonaws.com \"{domain}\"",
+        "site:dropbox.com/s \"{domain}\"",
+        "site:box.com/s \"{domain}\"",
+        "site:docs.google.com inurl:\"/d/\" \"{domain}\""
+      ],
+      "JFrog Artifactory": [
+        "site:jfrog.io \"{domain}\""
+      ],
+      "Firebase": [
+        "site:firebaseio.com \"{domain}\""
+      ],
+      "Dorks that work better w/o domain": [
+        "\"submit vulnerability report\" | \"powered by bugcrowd\" | \"powered by hackerone\"",
+        "site:*/security.txt \"bounty\""
+      ],
+      "Apache Server Status Exposed": [
+        "site:*/server-status apache"
+      ],
+      "WordPress": [
+        "inurl:/wp-admin/admin-ajax.php"
+      ],
+      "Drupal": [
+        "intext:\"Powered by\" & intext:Drupal & inurl:user"
+      ],
+      "Joomla": [
+        "site:*/joomla/login"
+      ]
+    };
+
+    // People Search Dorks from first file
+    const peopleSearchDorks = {
+      "Advanced Email Discovery": [
+        "\"{name}\" (email OR mail OR contact) -template",
+        "\"{name}\" intext:@gmail.com OR intext:@yahoo.com OR intext:@hotmail.com",
+        "\"{name}\" + \"email\" + \"contact\" filetype:pdf OR filetype:doc OR filetype:txt",
+        "intext:\"{name}\" intext:\"@\" before:2024 after:2020",
+        "\"{name}\" mailto:",
+        "\"{email}\" OR \"{name}\" intext:email ext:txt OR ext:csv OR ext:pdf"
+      ],
+      "Deep Personal Info": [
+        "\"{name}\" (resume OR CV OR curriculum OR education OR biography) filetype:pdf",
+        "\"{name}\" (address OR \"phone number\" OR contact OR email) -template",
+        "\"{name}\" intitle:\"about me\" OR intitle:\"biography\" OR intitle:\"profile\"",
+        "\"{name}\" intext:birthday OR intext:\"born in\" OR intext:\"born on\"",
+        "\"{name}\" (hometown OR \"lives in\" OR \"based in\" OR \"located in\")",
+        "\"{name}\" \"family\" OR \"married\" OR \"children\" OR \"spouse\" site:newspaper.com OR site:legacy.com"
+      ],
+      "Financial & Business": [
+        "\"{name}\" (CEO OR founder OR owner OR partner OR director) site:bloomberg.com OR site:reuters.com",
+        "\"{name}\" (investment OR investor OR shareholder OR stake) site:sec.gov",
+        "\"{name}\" site:companieshouse.gov.uk OR site:opencorporates.com",
+        "\"{name}\" (salary OR compensation OR bonus) site:salary.com OR site:glassdoor.com",
+        "\"{name}\" (net worth OR assets OR property) site:forbes.com OR site:wsj.com",
+        "\"{name}\" intext:\"board member\" OR intext:\"executive\" filetype:pdf"
+      ],
+      "Dark Web & Leaks": [
+        "site:pastebin.com \"{email}\" OR \"{name}\"",
+        "site:ghostbin.co \"{email}\" OR \"{name}\"",
+        "site:github.com \"{email}\" OR \"{name}\" filename:passwords OR filename:credentials",
+        "site:leak-lookup.com \"{email}\" OR \"{name}\"",
+        "intext:\"{email}\" site:paste.* OR site:*leak*",
+        "\"{name}\" (username OR user OR account) site:reddit.com OR site:github.com"
+      ],
+      "Advanced Social Media": [
+        "site:facebook.com \"{name}\" \"{location}\" -site:facebook.com/public",
+        "site:twitter.com \"{name}\" OR from:\"{name}\" until:2024 since:2010",
+        "site:instagram.com \"{name}\" (bio OR profile) \"{location}\"",
+        "\"{name}\" site:tiktok.com OR site:snapchat.com",
+        "\"{name}\" (account OR profile) site:*.com intext:social",
+        "site:linkedin.com/in/ \"{name}\" \"{location}\""
+      ],
+      "Legal & Court Records": [
+        "\"{name}\" site:courtlistener.com OR site:caselaw.findlaw.com",
+        "\"{name}\" (lawsuit OR litigation OR court OR legal OR arrest) site:news.*",
+        "\"{name}\" filetype:pdf site:*.gov intext:court",
+        "\"{name}\" site:mugshots.com OR site:arrests.org",
+        "\"{name}\" (conviction OR sentenced OR pleaded) site:justice.gov",
+        "\"{name}\" intext:\"case number\" OR intext:\"docket\" site:*.gov"
+      ],
+      "Deep Academic": [
+        "\"{name}\" site:academia.edu filetype:pdf",
+        "\"{name}\" (thesis OR dissertation) site:proquest.com",
+        "\"{name}\" author:* site:scholar.google.com",
+        "\"{name}\" site:researchgate.net intext:publication",
+        "\"{name}\" (professor OR researcher OR faculty) site:*.edu",
+        "\"{name}\" site:arxiv.org OR site:citeseerx.ist.psu.edu"
+      ],
+      "Advanced Property": [
+        "\"{name}\" site:property.* OR site:zillow.com OR site:trulia.com",
+        "\"{name}\" (property OR house OR address) site:whitepages.com",
+        "\"{name}\" intext:\"property records\" OR intext:\"tax assessment\"",
+        "\"{name}\" site:blockshopper.com OR site:propertyshark.com",
+        "\"{name}\" \"real estate\" OR \"property owner\" filetype:pdf",
+        "\"{name}\" (address OR residence) site:*.gov"
+      ],
+      "Digital Footprints": [
+        "\"{name}\" (username OR user OR account) site:github.com OR site:gitlab.com",
+        "\"{name}\" inurl:profile OR inurl:user OR inurl:about",
+        "\"{name}\" site:archive.org",
+        "\"{name}\" (forum OR community OR member) site:reddit.com",
+        "\"{name}\" intext:\"joined\" OR intext:\"member since\"",
+        "site:*/about \"{name}\" OR site:*/profile \"{name}\""
+      ],
+      "Professional Speaking": [
+        "\"{name}\" (speaker OR presenter OR keynote) site:conference.*",
+        "\"{name}\" site:slideshare.net OR site:speakerdeck.com",
+        "\"{name}\" intext:\"conference speaker\" OR intext:\"event speaker\"",
+        "\"{name}\" (panel OR webinar OR seminar) filetype:pdf",
+        "\"{name}\" site:youtube.com intext:\"conference\" OR intext:\"talk\"",
+        "\"{name}\" site:eventbrite.com OR site:meetup.com speaker"
+      ],
+      "Telecommunications": [
+        "\"{name}\" intext:\"phone number\" OR intext:\"mobile\" OR intext:\"contact\"",
+        "\"{name}\" site:whitepages.com OR site:411.com",
+        "\"{name}\" (phone OR contact OR reach) -template",
+        "\"{name}\" site:phonebook.* OR site:directory.*",
+        "\"{name}\" intext:\"contact information\" filetype:pdf OR filetype:doc",
+        "\"{name}\" site:*/contact OR site:*/directory"
+      ],
+      "Historical Records": [
+        "\"{name}\" site:ancestry.com OR site:genealogy.com",
+        "\"{name}\" (birth OR death OR marriage) site:familysearch.org",
+        "\"{name}\" site:newspapers.com date:1900-2024",
+        "\"{name}\" (obituary OR death) site:legacy.com",
+        "\"{name}\" site:findagrave.com OR site:familytree.com",
+        "\"{name}\" \"family history\" OR genealogy filetype:pdf"
+      ],
+      "Medical & Healthcare": [
+        "\"{name}\" site:healthgrades.com OR site:doctor.webmd.com",
+        "\"{name}\" (doctor OR physician OR surgeon OR dentist) site:*.edu",
+        "\"{name}\" intext:\"medical license\" OR intext:\"board certified\"",
+        "\"{name}\" site:hospital.* OR site:clinic.*",
+        "\"{name}\" (medical OR health OR practice) filetype:pdf",
+        "\"{name}\" site:*/provider OR site:*/doctor"
+      ],
+      "Advanced Location": [
+        "\"{name}\" \"{location}\" -template site:local.*",
+        "\"{name}\" (lives OR resides OR based) near:\"{location}\"",
+        "\"{name}\" \"{location}\" site:neighbors.* OR site:nextdoor.com",
+        "\"{name}\" (address OR location OR based) \"{location}\" filetype:pdf",
+        "\"{name}\" \"{location}\" site:local.yahoo.com OR site:patch.com",
+        "\"{name}\" (resident OR citizen) \"{location}\""
+      ]
+    };
+
+    // -------------------- Tab Switching Functions --------------------
+    function switchTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab
+      document.getElementById(tabId).classList.add('active');
+      
+      // Update sidebar active state
+      document.querySelectorAll('.sidebar-item').forEach((item, idx) => {
+        item.classList.remove('active');
+        if (idx === Array.from(document.querySelectorAll('.tab-content')).findIndex(t => t.id === tabId)) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Update menu active state
+      document.querySelectorAll('.menu-item').forEach((item, idx) => {
+        item.classList.remove('active');
+        if (idx === Array.from(document.querySelectorAll('.tab-content')).findIndex(t => t.id === tabId)) {
+          item.classList.add('active');
+        }
+      });
     }
     
-    // ---------------------- Redirection Function ----------------------
-    // Adapted from your reference, this function constructs the full Google search URL based on the dork type.
-    function google_it(type) {
-      let site = document.getElementById('quick-target').value.trim();
-      if (!site) {
-        alert('Please enter a valid domain in the Quick Dork Generation field.');
-        return;
+    // -------------------- Domain Validation --------------------
+    function isValidDomain(domain) {
+      if (!domain || domain.trim() === '') {
+        return false;
       }
-      if (site.indexOf('://') > 0) {
-        site = site.substr(site.indexOf('://') + 3);
-      }
-      let url = 'https://www.google.com/search?q=';
-      url += 'site:' + site;
-      switch(type) {
-        case 1:
-          url += ' +intitle:index.of';
-          break;
-        case 2:
-          url += ' +ext:xml+|+ext:conf+|+ext:cnf+|+ext:reg+|+ext:inf+|+ext:rdp+|+ext:cfg+|+ext:txt+|+ext:ora+|+ext:ini';
-          break;
-        case 3:
-          url += ' +ext:sql+|+ext:dbf+|+ext:mdb';
-          break;
-        case 4:
-          url += ' +ext:log';
-          break;
-        case 5:
-          url += ' +ext:bkf+|+ext:bkp+|+ext:bak+|+ext:old+|+ext:backup';
-          break;
-        case 6:
-          url += ' +inurl:login';
-          break;
-        case 7:
-          url += ' +intext:"sql syntax near"+|+intext:"syntax error has occurred"+|+intext:"incorrect syntax near"+|+intext:"unexpected end of SQL command"+|+intext:"Warning: mysql_connect()"+|+intext:"Warning: mysql_query()"+|+intext:"Warning: pg_connect()"';
-          break;
-        case 8:
-          url += ' +ext:doc+|+ext:docx+|+ext:odt+|+ext:pdf+|+ext:rtf+|+ext:sxw+|+ext:psw+|+ext:ppt+|+ext:pptx+|+ext:pps+|+ext:csv';
-          break;
-        case 9:
-          url += ' +ext:php+intitle:phpinfo+"published by the PHP Group"';
-          break;
-        case 10:
-          url += ' +inurl:wp-+|+inurl:wp-content+|+inurl:plugins+|+inurl:uploads+|+inurl:themes+|+inurl:download';
-          break;
-        case 11:
-          url += ' +inurl:shell+|+inurl:backdoor+|+inurl:wso+|+inurl:cmd+|+shadow+|+passwd+|+boot.ini+|+inurl:backdoor';
-          break;
-        case 12:
-          url += ' +inurl:readme+|+inurl:license+|+inurl:install+|+inurl:setup+|+inurl:config';
-          break;
-        case 13:
-          url += ' +inurl:redir+|+inurl:url+|+inurl:redirect+|+inurl:return+|+inurl:src=http+|+inurl:r=http';
-          break;
-        case 14:
-          url += ' +ext:action+|+ext:struts+|+ext:do';
-          break;
-        case 15:
-          url = 'https://www.google.com/search?q=site:pastebin.com+' + site;
-          break;
-        case 16:
-          url = 'https://www.google.com/search?q=site:linkedin.com+employees+' + site;
-          break;
-        case 17:
-          url += ' +inurl:"/phpinfo.php"+|+inurl:".htaccess"+|+inurl:"/.git" ' + site + ' -github';
-          break;
-        case 18:
-          url = 'https://www.google.com/search?q=site:*.' + site;
-          break;
-        case 19:
-          url = 'https://www.google.com/search?q=site:*.*.' + site;
-          break;
-        case 20:
-          url += ' +inurl:wp-content+|+inurl:wp-includes';
-          break;
-        case 21:
-          url = 'https://github.com/search?q="*.' + site + '"&type=host';
-          break;
-        case 22:
-          url = 'http://' + site + '/crossdomain.xml';
-          break;
-        case 23:
-          url = 'http://threatcrowd.org/domain.php?domain=' + site;
-          break;
-        case 24:
-          url = 'https://www.google.com/search?q=inurl:' + site + '+ext:swf';
-          break;
-        case 25:
-          url = 'https://yandex.com/search/?text=site:' + site + '%20mime:swf';
-          break;
-        case 26:
-          url = 'https://web.archive.org/cdx/search?url=' + site + '/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=urlkey:.*swf&limit=100000&_=1507209148310';
-          break;
-        case 27:
-          url = 'https://web.archive.org/cdx/search?url=' + site + '/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=mimetype:application/x-shockwave-flash&limit=100000&_=1507209148310';
-          break;
-        case 28:
-          url = 'https://web.archive.org/web/*/(' + site + ')';
-          break;
-        case 29:
-          url = 'https://web.archive.org/web/*/' + site + '/*';
-          break;
-        case 30:
-          url = 'https://crt.sh/?q=%25.' + site;
-          break;
-        case 31:
-          url = 'https://www.openbugbounty.org/search/?search=' + site + '&type=host';
-          break;
-        case 32:
-          url = 'https://www.reddit.com/search/?q=' + site + '&source=recent';
-          break;
-        case 33:
-          url = 'http://wwwb-dedup.us.archive.org:8083/cdx/search?url=' + site + '/&matchType=domain&collapse=digest&output=text&fl=original,timestamp&filter=urlkey:.*wp[-].*&limit=1000000&xx=';
-          break;
-        case 34:
-          url = 'https://censys.io/ipv4?q=' + site;
-          break;
-        case 35:
-          url = 'https://censys.io/domain?q=' + site;
-          break;
-        case 36:
-          url = 'https://censys.io/certificates?q=' + site;
-          break;
-        case 37:
-          url = 'https://www.shodan.io/search?query=' + site;
-          break;
-        default:
-          alert('Invalid dork type.');
-          return;
-      }
-      window.open(url, '_blank');
+      const domainRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/?|$)/i;
+      return domainRegex.test(domain);
     }
     
-    // ---------------------- Quick Dork Generation ----------------------
-    document.getElementById('quick-bug-bounty-btn').addEventListener('click', function() {
-      const domain = document.getElementById('quick-target').value.trim();
-      if (!domain) { alert('Please enter a valid domain'); return; }
-      const typesToUse = [1, 2, 3, 10, 18];
-      const resultsContainer = document.getElementById('quick-results-container');
-      resultsContainer.innerHTML = '';
-      document.getElementById('quick-category').textContent = 'Bug Bounty';
-      document.getElementById('quick-target-display').textContent = domain;
-      const dorks = { 'Key Dorks': [] };
-      typesToUse.forEach(type => {
-        const dork = generateDork(type, domain);
-        if (dork) { dorks['Key Dorks'].push(dork); }
-      });
-      dorks['Key Dorks'].forEach(d => {
-        const a = document.createElement('a');
-        a.className = 'result-link';
-        a.textContent = d.name;
-        a.onclick = function() { google_it(d.type); };
-        resultsContainer.appendChild(a);
-      });
-      document.getElementById('quick-results').style.display = 'block';
-      updateLastUpdate();
-    });
-    
-    document.getElementById('quick-people-search-btn').addEventListener('click', function() {
-      const name = document.getElementById('quick-target').value.trim();
-      if (!name) { alert('Please enter a name'); return; }
-      const resultsContainer = document.getElementById('quick-results-container');
-      resultsContainer.innerHTML = '';
-      document.getElementById('quick-category').textContent = 'People Search';
-      document.getElementById('quick-target-display').textContent = name;
-      const dorks = {
-        'Key People Search': [
-          {
-            query: `"${name}" (email OR contact) -template`,
-            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" (email OR contact) -template`)}`
-          },
-          {
-            query: `"${name}" intext:@gmail.com OR intext:@yahoo.com`,
-            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" intext:@gmail.com OR intext:@yahoo.com`)}`
-          },
-          {
-            query: `site:linkedin.com/in/ "${name}"`,
-            url: `https://www.google.com/search?q=${encodeURIComponent(`site:linkedin.com/in/ "${name}"`)}`
-          },
-          {
-            query: `"${name}" (resume OR CV) filetype:pdf`,
-            url: `https://www.google.com/search?q=${encodeURIComponent(`"${name}" (resume OR CV) filetype:pdf`)}`
-          },
-          {
-            query: `site:facebook.com "${name}"`,
-            url: `https://www.google.com/search?q=${encodeURIComponent(`site:facebook.com "${name}"`)}`
-          }
-        ]
-      };
-      const categoryEl = createCategoryElement('Key People Search Dorks', dorks['Key People Search']);
-      resultsContainer.appendChild(categoryEl);
-      document.getElementById('quick-results').style.display = 'block';
-      updateLastUpdate();
-    });
-    
-    // ---------------------- Utility Functions ----------------------
-    function generateDork(type, domain) {
-      if (!domain) return null;
+    // -------------------- Bug Bounty Dork Generation --------------------
+    function generateBugBountyDorks(domain) {
+      if (!isValidDomain(domain)) {
+        alert('Please enter a valid domain!');
+        return null;
+      }
+      
       domain = domain.replace(/https?:\/\//, '').replace(/\/.*$/, '');
-      if (dorkTypes[type]) {
-        const query = dorkTypes[type].query.replace(/{domain}/g, domain);
-        const url = query.startsWith('http') ? query : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-        return { name: dorkTypes[type].name, query, url, type };
+      
+      const result = {};
+      let totalDorks = 0;
+      
+      for (const category in bugBountyDorks) {
+        const dorks = bugBountyDorks[category].map(dork => {
+          const query = dork.replace(/{domain}/g, domain);
+          let url;
+          
+          if (query.startsWith("https://")) {
+            url = query;
+          } else {
+            url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+          }
+          
+          return { query, url };
+        });
+        
+        result[category] = dorks;
+        totalDorks += dorks.length;
       }
-      return null;
+      
+      return { 
+        categories: Object.keys(result).length,
+        totalDorks: totalDorks,
+        dorks: result
+      };
     }
     
+    // -------------------- People Search Dork Generation --------------------
+    function generatePeopleSearchDorks(name, email, location) {
+      if (!name || name.length < 3) {
+        alert('Please enter a valid name!');
+        return null;
+      }
+      
+      const result = {};
+      let totalDorks = 0;
+      
+      for (const category in peopleSearchDorks) {
+        const dorks = peopleSearchDorks[category].map(dork => {
+          const query = dork
+            .replace(/{name}/g, name)
+            .replace(/{email}/g, email || name)
+            .replace(/{location}/g, location || "");
+            
+          const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+          
+          return { query, url };
+        });
+        
+        result[category] = dorks;
+        totalDorks += dorks.length;
+      }
+      
+      return {
+        categories: Object.keys(result).length,
+        totalDorks: totalDorks,
+        dorks: result
+      };
+    }
+    
+    // -------------------- UI Functions --------------------
     function createCategoryElement(title, dorks) {
-      const categoryEl = document.createElement('div');
-      categoryEl.className = 'result-category';
+      const categoryDiv = document.createElement('div');
+      categoryDiv.className = 'result-category';
       
-      const headerEl = document.createElement('div');
-      headerEl.className = 'result-header';
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'result-header';
       
-      const titleEl = document.createElement('div');
-      titleEl.className = 'result-title';
-      titleEl.textContent = title;
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'result-title';
+      titleDiv.textContent = title;
       
-      const countEl = document.createElement('div');
-      countEl.className = 'result-count';
-      countEl.textContent = dorks.length;
+      const countDiv = document.createElement('div');
+      countDiv.className = 'result-count';
+      countDiv.textContent = dorks.length;
       
-      headerEl.appendChild(titleEl);
-      headerEl.appendChild(countEl);
+      headerDiv.appendChild(titleDiv);
+      headerDiv.appendChild(countDiv);
       
-      const listEl = document.createElement('div');
-      listEl.className = 'result-list';
+      const listDiv = document.createElement('div');
+      listDiv.className = 'result-list';
       
       dorks.forEach(dork => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'result-item';
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'result-item';
         
-        const linkEl = document.createElement('a');
-        linkEl.className = 'result-link';
-        linkEl.href = dork.url;
-        linkEl.textContent = dork.query;
-        linkEl.target = '_blank';
+        const linkElement = document.createElement('a');
+        linkElement.className = 'result-link';
+        linkElement.href = dork.url;
+        linkElement.textContent = dork.query;
+        linkElement.target = '_blank';
         
-        itemEl.appendChild(linkEl);
-        listEl.appendChild(itemEl);
+        itemDiv.appendChild(linkElement);
+        listDiv.appendChild(itemDiv);
       });
       
-      categoryEl.appendChild(headerEl);
-      categoryEl.appendChild(listEl);
+      categoryDiv.appendChild(headerDiv);
+      categoryDiv.appendChild(listDiv);
       
-      return categoryEl;
+      return categoryDiv;
     }
     
+    function displayDorkResults(containerId, statsPrefix, dorkData) {
+      const container = document.getElementById(containerId);
+      const catCount = document.getElementById(`${statsPrefix}-cat-count`);
+      const dorkCount = document.getElementById(`${statsPrefix}-dork-count`);
+      
+      container.innerHTML = '';
+      catCount.textContent = dorkData.categories;
+      dorkCount.textContent = dorkData.totalDorks;
+      
+      // Create category elements
+      for (const category in dorkData.dorks) {
+        const categoryElement = createCategoryElement(category, dorkData.dorks[category]);
+        container.appendChild(categoryElement);
+      }
+      
+      document.getElementById(`${containerId}`).parentElement.style.display = 'block';
+    }
+    
+    function populateDashboardCategories() {
+      const container = document.getElementById('dashboard-categories');
+      container.innerHTML = '';
+      
+      // Take a subset of categories for the dashboard
+      const categories = Object.keys(bugBountyDorks).slice(0, 6);
+      
+      categories.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'dork-category';
+        
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'category-header';
+        
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'category-title';
+        titleDiv.textContent = category;
+        
+        headerDiv.appendChild(titleDiv);
+        categoryDiv.appendChild(headerDiv);
+        
+        const list = document.createElement('ul');
+        list.className = 'dork-list';
+        
+        // Only show up to 5 dorks in the dashboard preview
+        const dorks = bugBountyDorks[category].slice(0, 5);
+        
+        dorks.forEach(dork => {
+          const listItem = document.createElement('li');
+          listItem.className = 'dork-item';
+          
+          const link = document.createElement('a');
+          link.className = 'dork-link';
+          link.textContent = dork.replace(/{domain}/g, 'example.com');
+          link.addEventListener('click', () => {
+            const domain = document.getElementById('quick-target').value.trim();
+            if (!domain) {
+              alert('Please enter a domain in the quick dork generation field first.');
+              return;
+            }
+            
+            const query = dork.replace(/{domain}/g, domain);
+            const url = query.startsWith('https://') 
+              ? query 
+              : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            
+            window.open(url, '_blank');
+          });
+          
+          listItem.appendChild(link);
+          list.appendChild(listItem);
+        });
+        
+        categoryDiv.appendChild(list);
+        container.appendChild(categoryDiv);
+      });
+    }
+    
+    // -------------------- Export Functions --------------------
     function getAllDorks(containerId) {
       const links = document.querySelectorAll(`#${containerId} .result-link`);
       const dorks = [];
-      links.forEach(link => { dorks.push(link.textContent); });
+      
+      links.forEach(link => {
+        dorks.push(link.textContent);
+      });
+      
       return dorks;
     }
     
@@ -902,122 +1301,145 @@
       a.click();
     }
     
+    function exportAsTxt(dorks, filename) {
+      const content = dorks.join('\n');
+      downloadFile(content, filename, 'text/plain');
+    }
+    
+    function exportAsCsv(dorks, filename) {
+      let content = 'Dork,URL\n';
+      
+      dorks.forEach(dork => {
+        const url = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+        content += `"${dork.replace(/"/g, '""')}","${url}"\n`;
+      });
+      
+      downloadFile(content, filename, 'text/csv');
+    }
+    
+    // -------------------- Time and State Functions --------------------
     function updateLastUpdate() {
       const now = new Date();
       const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
       document.getElementById('last-update').textContent = `LAST UPDATE: ${timeString}`;
     }
     
-    document.getElementById('refresh-btn').addEventListener('click', function() {
-      updateLastUpdate();
-      alert('Dashboard refreshed!');
-    });
-    updateLastUpdate();
-    
-    // ---------------------- Background Canvas Effect ----------------------
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.color = `rgba(0, ${Math.floor(Math.random() * 150 + 100)}, ${Math.floor(Math.random() * 150 + 100)}, ${Math.random() * 0.3 + 0.2})`;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
-        if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
-      }
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    function init() {
-      particles = [];
-      for (let i = 0; i < 50; i++) {
-        particles.push(new Particle());
-      }
-    }
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(particle => { particle.update(); particle.draw(); });
-      particles.forEach(particleA => {
-        particles.forEach(particleB => {
-          const dx = particleA.x - particleB.x;
-          const dy = particleA.y - particleB.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 100) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 - (distance / 1000)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particleA.x, particleA.y);
-            ctx.lineTo(particleB.x, particleB.y);
-            ctx.stroke();
-          }
-        });
+    function filterCategories(filter, element) {
+      // For future implementation
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active');
       });
-      requestAnimationFrame(animate);
+      
+      element.classList.add('active');
+      
+      // Apply actual filtering logic here
+      // For now, just show all categories
+      
+      updateLastUpdate();
     }
-    window.addEventListener('resize', function() {
-      resizeCanvas();
-      init();
-    });
-    resizeCanvas();
-    init();
-    animate();
     
-    // ---------------------- Dork Types for Quick Generation ----------------------
-    const dorkTypes = {
-      1: { name: "Directory listing vulnerabilities", query: "site:{domain} intitle:index.of" },
-      2: { name: "Exposed Configuration files", query: "site:{domain} ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini" },
-      3: { name: "Exposed Database files", query: "site:{domain} ext:sql | ext:dbf | ext:mdb" },
-      4: { name: "Exposed log files", query: "site:{domain} ext:log" },
-      5: { name: "Backup and old files", query: "site:{domain} ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup" },
-      6: { name: "Login pages", query: "site:{domain} inurl:login" },
-      7: { name: "SQL errors", query: "site:{domain} intext:\"sql syntax near\" | intext:\"syntax error has occurred\" | intext:\"incorrect syntax near\" | intext:\"unexpected end of SQL command\" | intext:\"Warning: mysql_connect()\" | intext:\"Warning: mysql_query()\" | intext:\"Warning: pg_connect()\"" },
-      8: { name: "Publicly exposed documents", query: "site:{domain} ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw | ext:ppt | ext:pptx | ext:pps | ext:csv" },
-      9: { name: "phpinfo()", query: "site:{domain} ext:php intitle:phpinfo \"published by the PHP Group\"" },
-      10: { name: "Find WordPress", query: "site:{domain} inurl:wp- | inurl:wp-content | inurl:plugins | inurl:uploads | inurl:themes | inurl:download" },
-      11: { name: "Finding Backdoors", query: "site:{domain} inurl:shell | inurl:backdoor | inurl:wso | inurl:cmd | shadow | passwd | boot.ini | inurl:backdoor" },
-      12: { name: "Install / Setup files", query: "site:{domain} inurl:readme | inurl:license | inurl:install | inurl:setup | inurl:config" },
-      13: { name: "Open Redirects", query: "site:{domain} inurl:redir | inurl:url | inurl:redirect | inurl:return | inurl:src=http | inurl:r=http" },
-      14: { name: "Apache STRUTS RCE", query: "site:{domain} ext:action | ext:struts | ext:do" },
-      15: { name: "Find Pastebin entries", query: "site:pastebin.com {domain}" },
-      16: { name: "Employees on LINKEDIN", query: "site:linkedin.com employees {domain}" },
-      17: { name: ".htaccess sensitive files", query: "site:{domain} inurl:\"/phpinfo.php\" | inurl:\".htaccess\" | inurl:\"/.git\" {domain} -github" },
-      18: { name: "Find Subdomains", query: "site:*.{domain}" },
-      19: { name: "Find Sub-Subdomains", query: "site:*.*.{domain}" },
-      20: { name: "Find WordPress #2", query: "site:{domain} inurl:wp-content | inurl:wp-includes" },
-      21: { name: "Search in GITHUB", query: "https://github.com/search?q=\"*.{domain}\"&type=host" },
-      22: { name: "Test CrossDomain", query: "http://{domain}/crossdomain.xml" },
-      23: { name: "Check in ThreatCrowd", query: "http://threatcrowd.org/domain.php?domain={domain}" },
-      24: { name: "Find .SWF file (Google)", query: "site:{domain} ext:swf" },
-      25: { name: "Find .SWF file (Yandex)", query: "site:{domain} mime:swf site:yandex.com" },
-      26: { name: "Search SWF in WayBack Machine", query: "https://web.archive.org/cdx/search?url={domain}/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=urlkey:.*swf&limit=100000&_=1507209148310" },
-      27: { name: "Search in WayBack Machine #2", query: "https://web.archive.org/cdx/search?url={domain}/&matchType=domain&collapse=urlkey&output=text&fl=original&filter=mimetype:application/x-shockwave-flash&limit=100000&_=1507209148310" },
-      28: { name: "Search in WayBack Machine #3", query: "https://web.archive.org/web/*/(. {domain})" },
-      29: { name: "Search in WayBack Machine [List/All]", query: "https://web.archive.org/web/*/{domain}/*" },
-      30: { name: "Check in crt.sh", query: "https://crt.sh/?q=%25.{domain}" },
-      31: { name: "Search in OpenBugBounty", query: "https://www.openbugbounty.org/search/?search={domain}&type=host" },
-      32: { name: "Search in Reddit", query: "https://www.reddit.com/search/?q={domain}&source=recent" },
-      33: { name: "Find WordPress [Wayback Machine]", query: "http://wwwb-dedup.us.archive.org:8083/cdx/search?url={domain}/&matchType=domain&collapse=digest&output=text&fl=original,timestamp&filter=urlkey:.*wp[-].*&limit=1000000&xx=" },
-      34: { name: "Check in CENSYS [IP]", query: "https://censys.io/ipv4?q={domain}" },
-      35: { name: "Check in CENSYS [Domains]", query: "https://censys.io/domain?q={domain}" },
-      36: { name: "Check in CENSYS [Certificates]", query: "https://censys.io/certificates?q={domain}" },
-      37: { name: "Search in SHODAN", query: "https://www.shodan.io/search?query={domain}" }
-    };
-  </script>
-</body>
-</html>
+    // -------------------- Event Listeners --------------------
+    // Bug Bounty Quick Generation
+    document.getElementById('quick-bug-bounty-btn').addEventListener('click', function() {
+    const domain = document.getElementById('quick-target').value.trim();
+    if (!domain) {
+      alert('Please enter a valid domain!');
+      return;
+    }
+    const dorkData = generateBugBountyDorks(domain);
+    if (!dorkData) return;
+    displayDorkResults('quick-results-container', 'quick', dorkData);
+    document.getElementById('quick-category').textContent = 'Bug Bounty';
+    document.getElementById('quick-target-display').textContent = domain;
+    document.getElementById('quick-results').style.display = 'block';
+    updateLastUpdate();
+  });
+
+  // People Search Quick Generation
+  document.getElementById('quick-people-search-btn').addEventListener('click', function() {
+    const name = document.getElementById('quick-target').value.trim();
+    if (!name || name.length < 3) {
+      alert('Please enter a valid name!');
+      return;
+    }
+    const dorkData = generatePeopleSearchDorks(name, '', '');
+    if (!dorkData) return;
+    displayDorkResults('quick-results-container', 'quick', dorkData);
+    document.getElementById('quick-category').textContent = 'People Search';
+    document.getElementById('quick-target-display').textContent = name;
+    document.getElementById('quick-results').style.display = 'block';
+    updateLastUpdate();
+  });
+
+  // Main Bug Bounty Generation
+  document.getElementById('generate-bug-bounty').addEventListener('click', function() {
+    const domain = document.getElementById('bug-bounty-domain').value.trim();
+    const dorkData = generateBugBountyDorks(domain);
+    if (!dorkData) return;
+    displayDorkResults('bug-bounty-categories', 'bb', dorkData);
+    document.getElementById('bug-bounty-results').style.display = 'block';
+  });
+
+  // Main People Search Generation
+  document.getElementById('generate-people-search').addEventListener('click', function() {
+    const name = document.getElementById('name-input').value.trim();
+    const email = document.getElementById('email-input').value.trim();
+    const location = document.getElementById('location-input').value.trim();
+    const dorkData = generatePeopleSearchDorks(name, email, location);
+    if (!dorkData) return;
+    displayDorkResults('people-search-categories', 'ps', dorkData);
+    document.getElementById('people-search-results').style.display = 'block';
+  });
+
+  // Export Buttons for Quick Results
+  document.getElementById('copy-all-btn').addEventListener('click', () => {
+    const dorks = getAllDorks('quick-results-container');
+    copyToClipboard(dorks.join('\n'));
+  });
+
+  document.getElementById('export-txt-btn').addEventListener('click', () => {
+    const dorks = getAllDorks('quick-results-container');
+    exportAsTxt(dorks, 'quick_dorks.txt');
+  });
+
+  document.getElementById('export-csv-btn').addEventListener('click', () => {
+    const dorks = getAllDorks('quick-results-container');
+    exportAsCsv(dorks, 'quick_dorks.csv');
+  });
+
+  // Export Buttons for Bug Bounty Results
+  document.getElementById('bb-copy-all').addEventListener('click', () => {
+    const dorks = getAllDorks('bug-bounty-categories');
+    copyToClipboard(dorks.join('\n'));
+  });
+
+  document.getElementById('bb-export-txt').addEventListener('click', () => {
+    const dorks = getAllDorks('bug-bounty-categories');
+    exportAsTxt(dorks, 'bug_bounty_dorks.txt');
+  });
+
+  document.getElementById('bb-export-csv').addEventListener('click', () => {
+    const dorks = getAllDorks('bug-bounty-categories');
+    exportAsCsv(dorks, 'bug_bounty_dorks.csv');
+  });
+
+  // Export Buttons for People Search Results
+  document.getElementById('ps-copy-all').addEventListener('click', () => {
+    const dorks = getAllDorks('people-search-categories');
+    copyToClipboard(dorks.join('\n'));
+  });
+
+  document.getElementById('ps-export-txt').addEventListener('click', () => {
+    const dorks = getAllDorks('people-search-categories');
+    exportAsTxt(dorks, 'people_search_dorks.txt');
+  });
+
+  document.getElementById('ps-export-csv').addEventListener('click', () => {
+    const dorks = getAllDorks('people-search-categories');
+    exportAsCsv(dorks, 'people_search_dorks.csv');
+  });
+
+  // Initialize dashboard categories
+  populateDashboardCategories();
+</script>
