@@ -5,7 +5,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/variendarkgirl/CyberDorks.svg)](https://github.com/variendarkgirl/CyberDorks/network)
 [![GitHub stars](https://img.shields.io/github/stars/variendarkgirl/CyberDorks.svg)](https://github.com/variendarkgirl/CyberDorks/stargazers)
 
-CyberDorks is an advanced Google dork generator tool aimed at security professionals and bug bounty hunters. This tool leverages various advanced search queries ("dorks") to help you find exposed files, vulnerable configurations, and other sensitive information on the web.
+CyberDorks is an advanced Google dork generator tool aimed at security professionals and bug bounty hunters. This tool leverages various advanced search queries ("dorks") to help you find exposed files, vulnerable configurations, and other sensitive information on the web.  Experience the live application here: Google Dorks Generator
 
 ## Features
 
