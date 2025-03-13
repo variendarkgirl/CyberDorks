@@ -7,6 +7,9 @@
 
 CyberDorks is an advanced Google dork generator tool aimed at security professionals and bug bounty hunters. This tool leverages various advanced search queries ("dorks") to help you find exposed files, vulnerable configurations, and other sensitive information on the web.  Experience the live application here: Google Dorks Generator
 
+![image](https://github.com/user-attachments/assets/cb25e2d6-a2ba-4e91-9cac-2fdc8693c043)
+
+
 ## Features
 
 - **Quick Dork Generation:** Easily generate key dorks by entering a domain or a person’s name.
