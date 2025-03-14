@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBERDORK - Advanced Google Dork Generator</title>
+    <title>CYBERDORK - Bug Bounty Dork Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Orbitron:wght@400;500;700&display=swap');
+        
         :root {
             --neon-cyan: #00ffff;
             --neon-green: #00ff99;
+            --neon-purple: #bc13fe;
             --dark-bg: #0c1016;
             --darker-bg: #0a0e14;
             --nav-bg: #080c12;
@@ -17,7 +19,7 @@
             --text-color: #e0e0e0;
             --subtitle-color: #8a8a8a;
         }
-         
+        
         * {
             margin: 0;
             padding: 0;
@@ -146,15 +148,6 @@
             box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
         }
         
-        .btn-people {
-            background-color: var(--neon-green);
-        }
-        
-        .btn-people:hover {
-            background-color: #00e088;
-            box-shadow: 0 0 12px rgba(0, 255, 153, 0.5);
-        }
-        
         .results-container {
             margin-top: 40px;
             display: none;
@@ -213,18 +206,148 @@
             color: var(--neon-cyan);
         }
         
-        .people-search-inputs {
+        /* Developer section */
+        #about-section {
             display: none;
+            animation: fadeIn 0.5s ease;
         }
         
-        .input-group {
-            margin-bottom: 15px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .input-label {
-            display: block;
+        .developer-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .developer-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, rgba(0, 255, 255, 0.1), transparent 40%),
+                linear-gradient(to right, rgba(188, 19, 254, 0.05), transparent),
+                radial-gradient(circle at bottom right, rgba(0, 255, 153, 0.1), transparent 60%);
+            z-index: 0;
+        }
+        
+        .developer-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.1) 0, transparent 1px, transparent 2px),
+                repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0, transparent 1px, transparent 2px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .dev-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .dev-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .dev-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dev-avatar i {
+            font-size: 32px;
+            color: var(--darker-bg);
+        }
+        
+        .dev-title {
+            flex: 1;
+        }
+        
+        .dev-title h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
             margin-bottom: 5px;
-            color: var(--subtitle-color);
+        }
+        
+        .dev-title .dev-role {
+            color: var(--neon-green);
+            font-weight: 500;
+        }
+        
+        .dev-description {
+            line-height: 1.7;
+            letter-spacing: 0.3px;
+            margin-bottom: 20px;
+        }
+        
+        .dev-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .skill-tag {
+            background-color: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .social-links {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: var(--neon-cyan);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
         }
         
         /* Responsive adjustments */
@@ -233,6 +356,7 @@
                 flex-direction: column;
                 gap: 10px;
                 text-align: center;
+                padding: 15px 1rem;
             }
             
             .buttons-container {
@@ -242,6 +366,19 @@
             .logo {
                 font-size: 1.8rem;
             }
+            
+            .nav-links {
+                gap: 10px;
+            }
+            
+            .dev-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -249,40 +386,24 @@
     <nav class="navbar">
         <div class="logo-container">
             <div class="logo">CYBERDORK</div>
-            <div class="tagline">Advanced Google Dork Generator</div>
+            <div class="tagline">Bug Bounty Dork Generator</div>
         </div>
         <div class="nav-links">
-            <a href="#" class="active">Home</a>
-            <a href="#">Bug Bounty</a>
-            <a href="#">People Search</a>
-            <a href="#">Helper Tool</a>
+            <a href="#" id="home-link" class="active">Home</a>
+            <a href="#" id="bug-bounty-link">Bug Bounty</a>
+            <a href="#" id="about-link">About the Developer</a>
         </div>
     </nav>
     
     <div class="container">
-        <div class="dork-card">
-            <h2 class="section-title">QUICK DORK GENERATION</h2>
+        <!-- Bug Bounty Section -->
+        <div id="bug-bounty-section" class="dork-card">
+            <h2 class="section-title">BUG BOUNTY DORK GENERATOR</h2>
             
             <input type="text" id="domain-input" class="input-field" placeholder="Enter domain (e.g., example.com)">
             
-            <div class="people-search-inputs">
-                <div class="input-group">
-                    <label class="input-label">Name</label>
-                    <input type="text" id="name-input" class="input-field" placeholder="Enter full name (e.g., John Smith)">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Email (optional)</label>
-                    <input type="text" id="email-input" class="input-field" placeholder="Email address">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Location (optional)</label>
-                    <input type="text" id="location-input" class="input-field" placeholder="Location">
-                </div>
-            </div>
-            
             <div class="buttons-container">
                 <button class="btn btn-bounty" onclick="generateBugBountyDorks()">Generate Bug Bounty Dorks</button>
-                <button class="btn btn-people" onclick="togglePeopleSearch()">Generate People Search Dorks</button>
             </div>
             
             <div id="results" class="results-container">
@@ -290,9 +411,45 @@
                 <div id="results-content"></div>
             </div>
         </div>
+        
+        <!-- About Developer Section -->
+        <div id="about-section" class="developer-card">
+            <div class="dev-content">
+                <div class="dev-header">
+                    <div class="dev-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="dev-title">
+                        <h3>Ethical Hacker</h3>
+                        <div class="dev-role">Cybersecurity Professional</div>
+                    </div>
+                </div>
+                <div class="dev-description">
+                    <p>I am a dedicated ethical hacker and cybersecurity professional with extensive experience in vulnerability assessment, penetration testing, and bug bounty hunting. My expertise lies in identifying security flaws in web applications, networks, and mobile platforms before malicious actors can exploit them.</p>
+                    <p>Throughout my career, I've helped secure critical infrastructure for various organizations and have responsibly disclosed numerous high-impact vulnerabilities. My approach combines automated scanning techniques with manual testing to uncover security issues that automated tools might miss.</p>
+                    <p>In the security community, I actively contribute to open-source security tools and share my knowledge through technical write-ups, conference presentations, and security research. I believe in the importance of collaborative security and helping organizations build a robust security posture.</p>
+                </div>
+                <div class="dev-skills">
+                    <span class="skill-tag">Web Application Security</span>
+                    <span class="skill-tag">Network Penetration Testing</span>
+                    <span class="skill-tag">Bug Bounty Hunting</span>
+                    <span class="skill-tag">OSINT</span>
+                    <span class="skill-tag">Exploit Development</span>
+                    <span class="skill-tag">Security Code Review</span>
+                    <span class="skill-tag">API Security</span>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fas fa-globe"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script>
+        // Bug Bounty dorks with all categories
         const bugBountyDorks = {
             "File Types": [
                 "site:{domain} filetype:pdf",
@@ -534,192 +691,33 @@
             ]
         };
 
-        // Complete people search dorks
-        const peopleSearchDorks = {
-            "Advanced Email Discovery": [
-                "\"{name}\" (email OR mail OR contact) -template",
-                "\"{name}\" intext:@gmail.com OR intext:@yahoo.com OR intext:@hotmail.com",
-                "\"{name}\" + \"email\" + \"contact\" filetype:pdf OR filetype:doc OR filetype:txt",
-                "intext:\"{name}\" intext:\"@\" before:2025 after:2020",
-                "\"{name}\" mailto:",
-                "\"{email}\" OR \"{name}\" intext:email ext:txt OR ext:csv OR ext:pdf",
-                "\"{name}\" intext:\"contact me\" intext:\"@\"",
-                "\"{name}\" intext:\"email address\" -template",
-                "\"{name}\" intext:\"email:\" OR intext:\"e-mail:\" OR intext:\"e mail:\"",
-                "\"{name}\" intext:\"contact information\" filetype:pdf OR filetype:doc"
-            ],
-            "Deep Personal Info": [
-                "\"{name}\" (resume OR CV OR curriculum OR education OR biography) filetype:pdf",
-                "\"{name}\" (address OR \"phone number\" OR contact OR email) -template",
-                "\"{name}\" intitle:\"about me\" OR intitle:\"biography\" OR intitle:\"profile\"",
-                "\"{name}\" intext:birthday OR intext:\"born in\" OR intext:\"born on\"",
-                "\"{name}\" (hometown OR \"lives in\" OR \"based in\" OR \"located in\")",
-                "\"{name}\" \"family\" OR \"married\" OR \"children\" OR \"spouse\" site:newspaper.com OR site:legacy.com",
-                "\"{name}\" \"personal information\" filetype:pdf OR filetype:doc",
-                "\"{name}\" \"date of birth\" site:*.gov",
-                "\"{name}\" \"home address\" -template",
-                "\"{name}\" \"personal details\" -template"
-            ],
-            "Financial & Business": [
-                "\"{name}\" (CEO OR founder OR owner OR partner OR director) site:bloomberg.com OR site:reuters.com",
-                "\"{name}\" (investment OR investor OR shareholder OR stake) site:sec.gov",
-                "\"{name}\" site:companieshouse.gov.uk OR site:opencorporates.com",
-                "\"{name}\" (salary OR compensation OR bonus) site:salary.com OR site:glassdoor.com",
-                "\"{name}\" (net worth OR assets OR property) site:forbes.com OR site:wsj.com",
-                "\"{name}\" intext:\"board member\" OR intext:\"executive\" filetype:pdf",
-                "\"{name}\" \"business owner\" OR \"entrepreneur\" OR \"startup\"",
-                "\"{name}\" \"financial disclosure\" site:*.gov",
-                "\"{name}\" \"income\" OR \"earnings\" OR \"revenue\" -template",
-                "\"{name}\" \"company registration\" OR \"business registration\""
-            ],
-            "Dark Web & Leaks": [
-                "site:pastebin.com \"{email}\" OR \"{name}\"",
-                "site:ghostbin.co \"{email}\" OR \"{name}\"",
-                "site:github.com \"{email}\" OR \"{name}\" filename:passwords OR filename:credentials",
-                "site:leak-lookup.com \"{email}\" OR \"{name}\"",
-                "intext:\"{email}\" site:paste.* OR site:*leak*",
-                "\"{name}\" (username OR user OR account) site:reddit.com OR site:github.com",
-                "\"{name}\" \"data breach\" OR \"leaked\" OR \"hack\"",
-                "\"{name}\" \"password reset\" OR \"security question\"",
-                "\"{email}\" site:haveibeenpwned.com",
-                "\"{name}\" intext:\"password\" intext:\"username\""
-            ],
-            "Advanced Social Media": [
-                "site:facebook.com \"{name}\" \"{location}\" -site:facebook.com/public",
-                "site:twitter.com \"{name}\" OR from:\"{name}\" until:2025 since:2010",
-                "site:instagram.com \"{name}\" (bio OR profile) \"{location}\"",
-                "\"{name}\" site:tiktok.com OR site:snapchat.com",
-                "\"{name}\" (account OR profile) site:*.com intext:social",
-                "site:linkedin.com/in/ \"{name}\" \"{location}\"",
-                "site:mastodon.* \"{name}\"",
-                "site:pinterest.com \"{name}\"",
-                "site:youtube.com \"{name}\" (channel OR about)",
-                "site:medium.com \"{name}\""
-            ],
-            "Legal & Court Records": [
-                "\"{name}\" site:courtlistener.com OR site:caselaw.findlaw.com",
-                "\"{name}\" (lawsuit OR litigation OR court OR legal OR arrest) site:news.*",
-                "\"{name}\" filetype:pdf site:*.gov intext:court",
-                "\"{name}\" site:mugshots.com OR site:arrests.org",
-                "\"{name}\" (conviction OR sentenced OR pleaded) site:justice.gov",
-                "\"{name}\" intext:\"case number\" OR intext:\"docket\" site:*.gov",
-                "\"{name}\" \"criminal record\" OR \"offender\" site:*.gov",
-                "\"{name}\" \"court appearance\" OR \"hearing\" OR \"trial\"",
-                "\"{name}\" \"plaintiff\" OR \"defendant\" site:*.uscourts.gov",
-                "\"{name}\" \"legal proceedings\" filetype:pdf"
-            ],
-            "Deep Academic": [
-                "\"{name}\" site:academia.edu filetype:pdf",
-                "\"{name}\" (thesis OR dissertation) site:proquest.com",
-                "\"{name}\" author:* site:scholar.google.com",
-                "\"{name}\" site:researchgate.net intext:publication",
-                "\"{name}\" (professor OR researcher OR faculty) site:*.edu",
-                "\"{name}\" site:arxiv.org OR site:citeseerx.ist.psu.edu",
-                "\"{name}\" \"academic paper\" OR \"research paper\" OR \"journal article\"",
-                "\"{name}\" \"conference proceedings\" filetype:pdf",
-                "\"{name}\" \"department of\" site:*.edu",
-                "\"{name}\" \"alumni\" OR \"graduate\" site:*.edu"
-            ],
-            "Advanced Property": [
-                "\"{name}\" site:property.* OR site:zillow.com OR site:trulia.com",
-                "\"{name}\" (property OR house OR address) site:whitepages.com",
-                "\"{name}\" intext:\"property records\" OR intext:\"tax assessment\"",
-                "\"{name}\" site:blockshopper.com OR site:propertyshark.com",
-                "\"{name}\" \"real estate\" OR \"property owner\" filetype:pdf",
-                "\"{name}\" (address OR residence) site:*.gov",
-                "\"{name}\" \"homeowner\" OR \"landlord\" OR \"tenant\"",
-                "\"{name}\" \"property deed\" OR \"title deed\" OR \"mortgage\"",
-                "\"{name}\" \"house valuation\" OR \"property valuation\"",
-                "\"{name}\" \"address history\" OR \"property history\""
-            ],
-            "Digital Footprints": [
-                "\"{name}\" (username OR user OR account) site:github.com OR site:gitlab.com",
-                "\"{name}\" inurl:profile OR inurl:user OR inurl:about",
-                "\"{name}\" site:archive.org",
-                "\"{name}\" (forum OR community OR member) site:reddit.com",
-                "\"{name}\" intext:\"joined\" OR intext:\"member since\"",
-                "site:*/about \"{name}\" OR site:*/profile \"{name}\"",
-                "\"{name}\" \"digital identity\" OR \"online presence\"",
-                "\"{name}\" site:disqus.com",
-                "\"{name}\" site:stackoverflow.com",
-                "\"{name}\" site:quora.com"
-            ],
-            "Professional Speaking": [
-                "\"{name}\" (speaker OR presenter OR keynote) site:conference.*",
-                "\"{name}\" site:slideshare.net OR site:speakerdeck.com",
-                "\"{name}\" intext:\"conference speaker\" OR intext:\"event speaker\"",
-                "\"{name}\" (panel OR webinar OR seminar) filetype:pdf",
-                "\"{name}\" site:youtube.com intext:\"conference\" OR intext:\"talk\"",
-                "\"{name}\" site:eventbrite.com OR site:meetup.com speaker",
-                "\"{name}\" \"guest speaker\" OR \"featured speaker\"",
-                "\"{name}\" \"presentation\" OR \"workshop\" filetype:ppt OR filetype:pdf",
-                "\"{name}\" \"public speaking\" OR \"speaking engagement\"",
-                "\"{name}\" \"industry expert\" OR \"thought leader\""
-            ],
-            "Telecommunications": [
-                "\"{name}\" intext:\"phone number\" OR intext:\"mobile\" OR intext:\"contact\"",
-                "\"{name}\" site:whitepages.com OR site:411.com",
-                "\"{name}\" (phone OR contact OR reach) -template",
-                "\"{name}\" site:phonebook.* OR site:directory.*",
-                "\"{name}\" intext:\"contact information\" filetype:pdf OR filetype:doc",
-                "\"{name}\" site:*/contact OR site:*/directory",
-                "\"{name}\" \"cell phone\" OR \"mobile number\"",
-                "\"{name}\" \"telephone directory\" OR \"phone directory\"",
-                "\"{name}\" \"call me at\" OR \"reach me at\"",
-                "\"{name}\" \"contact details\" -template"
-            ],
-            "Historical Records": [
-                "\"{name}\" site:ancestry.com OR site:genealogy.com",
-                "\"{name}\" (birth OR death OR marriage) site:familysearch.org",
-                "\"{name}\" site:newspapers.com date:1900-2025",
-                "\"{name}\" (obituary OR death) site:legacy.com",
-                "\"{name}\" site:findagrave.com OR site:familytree.com",
-                "\"{name}\" \"family history\" OR genealogy filetype:pdf",
-                "\"{name}\" \"historical records\" OR \"archives\"",
-                "\"{name}\" \"ancestry\" OR \"lineage\" OR \"descendants\"",
-                "\"{name}\" \"cemetery records\" OR \"burial records\"",
-                "\"{name}\" \"historical society\" OR \"history museum\""
-            ],
-            "Medical & Healthcare": [
-                "\"{name}\" site:healthgrades.com OR site:doctor.webmd.com",
-                "\"{name}\" (doctor OR physician OR surgeon OR dentist) site:*.edu",
-                "\"{name}\" intext:\"medical license\" OR intext:\"board certified\"",
-                "\"{name}\" site:hospital.* OR site:clinic.*",
-                "\"{name}\" (medical OR health OR practice) filetype:pdf",
-                "\"{name}\" site:*/provider OR site:*/doctor",
-                "\"{name}\" \"medical practice\" OR \"healthcare provider\"",
-                "\"{name}\" \"patient reviews\" OR \"doctor reviews\"",
-                "\"{name}\" \"medical directory\" OR \"physician directory\"",
-                "\"{name}\" \"medical school\" OR \"residency\" site:*.edu"
-            ]
-        };
-
-        let peopleSearchMode = false;
+        // Navigation functionality
+        document.getElementById('home-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('home-link');
+            document.getElementById('bug-bounty-section').style.display = 'block';
+            document.getElementById('about-section').style.display = 'none';
+        });
         
-        function togglePeopleSearch() {
-            peopleSearchMode = !peopleSearchMode;
-            const domainInput = document.getElementById('domain-input');
-            const peopleInputs = document.querySelector('.people-search-inputs');
-            
-            if (peopleSearchMode) {
-                domainInput.style.display = 'none';
-                peopleInputs.style.display = 'block';
-                document.querySelector('.btn-people').textContent = 'Search for Person';
-                document.querySelector('.btn-bounty').textContent = 'Switch to Bug Bounty';
-            } else {
-                domainInput.style.display = 'block';
-                peopleInputs.style.display = 'none';
-                document.querySelector('.btn-people').textContent = 'Generate People Search Dorks';
-                document.querySelector('.btn-bounty').textContent = 'Generate Bug Bounty Dorks';
-                
-                // Reset people search fields
-                document.getElementById('name-input').value = '';
-                document.getElementById('email-input').value = '';
-                document.getElementById('location-input').value = '';
-            }
-            
-            // Clear results when switching modes
-            hideResults();
+        document.getElementById('bug-bounty-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('bug-bounty-link');
+            document.getElementById('bug-bounty-section').style.display = 'block';
+            document.getElementById('about-section').style.display = 'none';
+        });
+        
+        document.getElementById('about-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('about-link');
+            document.getElementById('bug-bounty-section').style.display = 'none';
+            document.getElementById('about-section').style.display = 'block';
+        });
+        
+        function setActiveNav(id) {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
         }
         
         function isValidDomain(domain) {
@@ -728,11 +726,6 @@
         }
         
         function generateBugBountyDorks() {
-            if (peopleSearchMode) {
-                togglePeopleSearch();
-                return;
-            }
-            
             const domainInput = document.getElementById('domain-input').value.trim();
             if (!isValidDomain(domainInput)) {
                 alert('Please enter a valid domain (e.g., example.com)');
@@ -772,62 +765,6 @@
                         link.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                     }
                     
-                    link.textContent = query;
-                    link.className = 'dork-link';
-                    link.target = '_blank';
-                    dorkLinks.appendChild(link);
-                });
-                
-                categoryContainer.appendChild(dorkLinks);
-                resultsContent.appendChild(categoryContainer);
-            }
-        }
-        
-        function generatePeopleSearchDorks() {
-            if (!peopleSearchMode) {
-                togglePeopleSearch();
-                return;
-            }
-            
-            const nameInput = document.getElementById('name-input').value.trim();
-            const emailInput = document.getElementById('email-input').value.trim();
-            const locationInput = document.getElementById('location-input').value.trim();
-            
-            if (nameInput.length < 3) {
-                alert('Please enter a valid name');
-                return;
-            }
-            
-            const resultsContent = document.getElementById('results-content');
-            resultsContent.innerHTML = '';
-            
-            // Show results container
-            document.getElementById('results').style.display = 'block';
-            
-            // Update results title
-            document.querySelector('.results-title').textContent = `People Search Dorks for: ${nameInput}`;
-            
-            // Generate dorks
-            for (const category in peopleSearchDorks) {
-                const categoryContainer = document.createElement('div');
-                categoryContainer.className = 'category-container';
-                
-                const categoryTitle = document.createElement('h4');
-                categoryTitle.className = 'category-title';
-                categoryTitle.innerHTML = `<i class="fas fa-angle-right"></i> ${category}`;
-                categoryContainer.appendChild(categoryTitle);
-                
-                const dorkLinks = document.createElement('div');
-                dorkLinks.className = 'dork-links';
-                
-                peopleSearchDorks[category].forEach(dork => {
-                    let query = dork
-                        .replace(/{name}/g, nameInput)
-                        .replace(/{email}/g, emailInput || nameInput)
-                        .replace(/{location}/g, locationInput || "");
-                        
-                    const link = document.createElement('a');
-                    link.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
                     link.textContent = query;
                     link.className = 'dork-link';
                     link.target = '_blank';
