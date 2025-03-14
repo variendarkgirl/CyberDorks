@@ -6,16 +6,21 @@
     <title>CYBERDORK - Bug Bounty Dork Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Orbitron:wght@400;500;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap');
+        
         :root {
             --neon-cyan: #00ffff;
             --neon-green: #00ff99;
             --neon-purple: #bc13fe;
+            --neon-pink: #ff00ff;
+            --neon-blue: #00bfff;
+            --neon-yellow: #ffff00;
+            --neon-red: #ff3131;
             --dark-bg: #0c1016;
             --darker-bg: #0a0e14;
             --nav-bg: #080c12;
             --card-bg: #111824;
+            --card-bg-alt: #14131c;
             --text-color: #e0e0e0;
             --subtitle-color: #8a8a8a;
         }
@@ -31,6 +36,23 @@
             background-color: var(--dark-bg);
             color: var(--text-color);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* High-tech grid background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)),
+                linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            z-index: -1;
         }
         
         .navbar {
@@ -40,6 +62,26 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Navbar scan line effect */
+        .navbar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--neon-cyan), transparent);
+            opacity: 0.4;
+            animation: scanline 4s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
         .logo-container {
@@ -53,12 +95,35 @@
             font-weight: 700;
             color: var(--neon-cyan);
             letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            position: relative;
+        }
+        
+        /* Digital distortion effect */
+        .logo::before {
+            content: "CYBERDORK";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--neon-purple);
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+            animation: glitch 3s infinite;
+            opacity: 0.3;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0, 0); opacity: 0.3; }
+            91% { transform: translate(-2px, 1px); opacity: 0.5; }
+            92% { transform: translate(2px, -1px); opacity: 0.7; }
+            93% { transform: translate(-1px, -1px); opacity: 0.5; }
+            94% { transform: translate(1px, 1px); opacity: 0.3; }
         }
         
         .tagline {
             font-size: 0.9rem;
             color: var(--subtitle-color);
             margin-top: -5px;
+            font-family: 'Share Tech Mono', monospace;
         }
         
         .nav-links {
@@ -71,21 +136,49 @@
             text-decoration: none;
             padding: 5px 10px;
             font-size: 1rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        
+        .nav-links a::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--neon-cyan);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
         }
         
         .nav-links a:hover {
             color: var(--neon-cyan);
         }
         
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+        
         .nav-links a.active {
             color: var(--neon-cyan);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .nav-links a.active::before {
+            width: 100%;
+            height: 2px;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
         
         .dork-card {
@@ -93,7 +186,35 @@
             border-radius: 8px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        /* Cybersecurity badge corners */
+        .dork-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-top: 2px solid var(--neon-cyan);
+            border-left: 2px solid var(--neon-cyan);
+            border-top-left-radius: 7px;
+        }
+        
+        .dork-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            border-bottom: 2px solid var(--neon-cyan);
+            border-right: 2px solid var(--neon-cyan);
+            border-bottom-right-radius: 7px;
         }
         
         .section-title {
@@ -102,23 +223,41 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 1.8rem;
             margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--neon-cyan), transparent);
         }
         
         .input-field {
             width: 100%;
             padding: 15px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
             color: var(--text-color);
             font-size: 1rem;
             border-radius: 4px;
             margin-bottom: 25px;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.3s ease;
         }
         
         .input-field:focus {
             outline: none;
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
         
         .buttons-container {
@@ -137,6 +276,35 @@
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            animation: sheen 1s forwards;
+        }
+        
+        @keyframes sheen {
+            0% {
+                transform: rotate(45deg) translateY(0);
+            }
+            100% {
+                transform: rotate(45deg) translateY(200%);
+            }
         }
         
         .btn-bounty {
@@ -145,7 +313,7 @@
         
         .btn-bounty:hover {
             background-color: #00d8d8;
-            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
         }
         
         .results-container {
@@ -160,6 +328,7 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
         }
         
         .category-container {
@@ -173,6 +342,7 @@
             font-weight: 500;
             display: flex;
             align-items: center;
+            font-family: 'Share Tech Mono', monospace;
         }
         
         .category-title i {
@@ -199,11 +369,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            border-left: 2px solid rgba(0, 255, 255, 0.1);
         }
         
         .dork-link:hover {
             background-color: rgba(0, 255, 255, 0.1);
             color: var(--neon-cyan);
+            border-left: 2px solid var(--neon-cyan);
         }
         
         /* Developer section */
@@ -223,15 +395,38 @@
             }
         }
         
+        .developer-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 992px) {
+            .developer-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
         .developer-card {
             background-color: var(--card-bg);
             border-radius: 8px;
             padding: 2rem;
-            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            height: 100%;
         }
         
+        .developer-card.founder {
+            background-color: var(--card-bg);
+        }
+        
+        .developer-card.contributor {
+            background-color: var(--card-bg-alt);
+        }
+        
+        /* Cyberpunk line patterns */
         .developer-card::before {
             content: "";
             position: absolute;
@@ -240,12 +435,13 @@
             right: 0;
             bottom: 0;
             background: 
-                linear-gradient(45deg, rgba(0, 255, 255, 0.1), transparent 40%),
+                linear-gradient(45deg, rgba(0, 255, 255, 0.05), transparent 40%),
                 linear-gradient(to right, rgba(188, 19, 254, 0.05), transparent),
-                radial-gradient(circle at bottom right, rgba(0, 255, 153, 0.1), transparent 60%);
+                radial-gradient(circle at bottom right, rgba(0, 255, 153, 0.05), transparent 60%);
             z-index: 0;
         }
         
+        /* Circuit board pattern */
         .developer-card::after {
             content: "";
             position: absolute;
@@ -253,12 +449,56 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.1) 0, transparent 1px, transparent 2px),
-                repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0, transparent 1px, transparent 2px);
-            background-size: 30px 30px;
-            opacity: 0.3;
+            background-size: 50px 50px;
+            opacity: 0.15;
             z-index: -1;
+        }
+        
+        .developer-card.founder::after {
+            background-image: 
+                radial-gradient(circle at 25px 25px, var(--neon-cyan) 1px, transparent 1px),
+                linear-gradient(to right, transparent 23px, var(--neon-cyan) 1px, transparent 26px),
+                linear-gradient(to bottom, transparent 23px, var(--neon-cyan) 1px, transparent 26px);
+        }
+        
+        .developer-card.contributor::after {
+            background-image: 
+                radial-gradient(circle at 25px 25px, var(--neon-green) 1px, transparent 1px),
+                linear-gradient(to right, transparent 23px, var(--neon-green) 1px, transparent 26px),
+                linear-gradient(to bottom, transparent 23px, var(--neon-green) 1px, transparent 26px);
+        }
+        
+        /* Cybersecurity corner accents */
+        .developer-card .corner-tl {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-top: 2px solid;
+            border-left: 2px solid;
+            border-top-left-radius: 7px;
+        }
+        
+        .developer-card .corner-br {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
+            border-bottom-right-radius: 7px;
+        }
+        
+        .developer-card.founder .corner-tl,
+        .developer-card.founder .corner-br {
+            border-color: var(--neon-cyan);
+        }
+        
+        .developer-card.contributor .corner-tl,
+        .developer-card.contributor .corner-br {
+            border-color: var(--neon-green);
         }
         
         .dev-content {
@@ -277,7 +517,37 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .dev-avatar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 2px;
             background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .founder .dev-avatar::before {
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+        }
+        
+        .contributor .dev-avatar::before {
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+        }
+        
+        .dev-avatar-inner {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(30, 41, 59, 1), rgba(17, 24, 39, 1));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -285,7 +555,14 @@
         
         .dev-avatar i {
             font-size: 32px;
-            color: var(--darker-bg);
+        }
+        
+        .founder .dev-avatar i {
+            color: var(--neon-cyan);
+        }
+        
+        .contributor .dev-avatar i {
+            color: var(--neon-green);
         }
         
         .dev-title {
@@ -295,19 +572,46 @@
         .dev-title h3 {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
-            color: var(--neon-cyan);
             margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .founder .dev-title h3 {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .contributor .dev-title h3 {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
         }
         
         .dev-title .dev-role {
-            color: var(--neon-green);
             font-weight: 500;
+            color: var(--text-color);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .dev-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 255, 255, 0.2), transparent);
+            margin: 15px 0;
+        }
+        
+        .contributor .dev-divider {
+            background: linear-gradient(to right, transparent, rgba(0, 255, 153, 0.2), transparent);
         }
         
         .dev-description {
             line-height: 1.7;
             letter-spacing: 0.3px;
             margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 0.95rem;
         }
         
         .dev-skills {
@@ -318,11 +622,34 @@
         }
         
         .skill-tag {
-            background-color: rgba(0, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.3);
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.85rem;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .founder .skill-tag {
+            background-color: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: var(--neon-cyan);
+        }
+        
+        .founder .skill-tag:hover {
+            background-color: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+        }
+        
+        .contributor .skill-tag {
+            background-color: rgba(0, 255, 153, 0.1);
+            border: 1px solid rgba(0, 255, 153, 0.3);
+            color: var(--neon-green);
+        }
+        
+        .contributor .skill-tag:hover {
+            background-color: rgba(0, 255, 153, 0.15);
+            box-shadow: 0 0 8px rgba(0, 255, 153, 0.3);
         }
         
         .social-links {
@@ -335,19 +662,149 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background-color: rgba(0, 0, 0, 0.3);
             color: var(--text-color);
             transition: all 0.3s ease;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-link::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 1px;
+            background: linear-gradient(45deg, var(--neon-cyan), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        
+        .contributor .social-link::before {
+            background: linear-gradient(45deg, var(--neon-green), transparent);
         }
         
         .social-link:hover {
             transform: translateY(-3px);
+        }
+        
+        .founder .social-link:hover {
             color: var(--neon-cyan);
             box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+        }
+        
+        .contributor .social-link:hover {
+            color: var(--neon-green);
+            box-shadow: 0 5px 15px rgba(0, 255, 153, 0.2);
+        }
+        
+        .social-link:hover::before {
+            opacity: 1;
+        }
+        
+        /* Data breach animation */
+        .data-breach {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        .data-breach::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0, 255, 255, 0.5) 70%);
+            animation: pulse 2s infinite;
+        }
+        
+        .contributor .data-breach::before {
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0, 255, 153, 0.5) 70%);
+        }
+        
+        .data-breach i {
+            font-size: 18px;
+        }
+        
+        .founder .data-breach i {
+            color: var(--neon-cyan);
+        }
+        
+        .contributor .data-breach i {
+            color: var(--neon-green);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+        }
+        
+        /* Binary code background for about section title */
+        .about-title-container {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        
+        .about-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+        
+        .about-title-container::before {
+            content: "10010110 01101001 10011001";
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-cyan);
+            opacity: 0.2;
+            letter-spacing: 2px;
+        }
+        
+        .about-title-container::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--neon-cyan), transparent);
         }
         
         /* Responsive adjustments */
@@ -379,6 +836,10 @@
             .container {
                 padding: 1rem;
             }
+            
+            .developer-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -391,7 +852,7 @@
         <div class="nav-links">
             <a href="#" id="home-link" class="active">Home</a>
             <a href="#" id="bug-bounty-link">Bug Bounty</a>
-            <a href="#" id="about-link">About the Developer</a>
+            <a href="#" id="about-link">About Developers</a>
         </div>
     </nav>
     
@@ -413,36 +874,108 @@
         </div>
         
         <!-- About Developer Section -->
-        <div id="about-section" class="developer-card">
-            <div class="dev-content">
-                <div class="dev-header">
-                    <div class="dev-avatar">
-                        <i class="fas fa-user-shield"></i>
+        <div id="about-section">
+            <div class="about-title-container">
+                <h2 class="about-title">THE SECURITY TEAM</h2>
+            </div>
+            
+            <div class="developer-cards">
+                <!-- Founder Profile -->
+                <div class="developer-card founder">
+                    <div class="corner-tl"></div>
+                    <div class="corner-br"></div>
+                    <div class="data-breach">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <div class="dev-title">
-                        <h3>Ethical Hacker</h3>
-                        <div class="dev-role">Cybersecurity Professional</div>
+                    
+                    <div class="dev-content">
+                        <div class="dev-header">
+                            <div class="dev-avatar">
+                                <div class="dev-avatar-inner">
+                                    <i class="fas fa-user-secret"></i>
+                                </div>
+                            </div>
+                            <div class="dev-title">
+                                <h3>NeXus</h3>
+                                <div class="dev-role">Founder & Lead Security Researcher</div>
+                            </div>
+                        </div>
+                        
+                        <div class="dev-divider"></div>
+                        
+                        <div class="dev-description">
+                            <p>A veteran in cybersecurity with over a decade of experience exposing vulnerabilities in high-profile systems. I specialize in discovering zero-day exploits and have responsibly disclosed critical security flaws to major tech companies across the globe.</p>
+                            <p>My approach combines advanced automation with creative manual techniques to uncover security issues that conventional methods often miss. I've developed several custom vulnerability assessment tools that have revolutionized how security teams approach threat detection.</p>
+                            <p>As an active participant in the security community, I regularly contribute to open-source security projects and mentor emerging ethical hackers. My research has been featured at prestigious security conferences including DEF CON, Black Hat, and OWASP Global AppSec.</p>
+                        </div>
+                        
+                        <div class="dev-skills">
+                            <span class="skill-tag">Zero-Day Research</span>
+                            <span class="skill-tag">Advanced Exploit Development</span>
+                            <span class="skill-tag">Red Team Operations</span>
+                            <span class="skill-tag">Reverse Engineering</span>
+                            <span class="skill-tag">Threat Intelligence</span>
+                            <span class="skill-tag">Cloud Security</span>
+                            <span class="skill-tag">Binary Analysis</span>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fas fa-globe"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-hackerrank"></i></a>
+                        </div>
                     </div>
                 </div>
-                <div class="dev-description">
-                    <p>I am a dedicated ethical hacker and cybersecurity professional with extensive experience in vulnerability assessment, penetration testing, and bug bounty hunting. My expertise lies in identifying security flaws in web applications, networks, and mobile platforms before malicious actors can exploit them.</p>
-                    <p>Throughout my career, I've helped secure critical infrastructure for various organizations and have responsibly disclosed numerous high-impact vulnerabilities. My approach combines automated scanning techniques with manual testing to uncover security issues that automated tools might miss.</p>
-                    <p>In the security community, I actively contribute to open-source security tools and share my knowledge through technical write-ups, conference presentations, and security research. I believe in the importance of collaborative security and helping organizations build a robust security posture.</p>
-                </div>
-                <div class="dev-skills">
-                    <span class="skill-tag">Web Application Security</span>
-                    <span class="skill-tag">Network Penetration Testing</span>
-                    <span class="skill-tag">Bug Bounty Hunting</span>
-                    <span class="skill-tag">OSINT</span>
-                    <span class="skill-tag">Exploit Development</span>
-                    <span class="skill-tag">Security Code Review</span>
-                    <span class="skill-tag">API Security</span>
-                </div>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="social-link"><i class="fas fa-globe"></i></a>
+                
+                <!-- Contributor Profile -->
+                <div class="developer-card contributor">
+                    <div class="corner-tl"></div>
+                    <div class="corner-br"></div>
+                    <div class="data-breach">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    
+                    <div class="dev-content">
+                        <div class="dev-header">
+                            <div class="dev-avatar">
+                                <div class="dev-avatar-inner">
+                                    <i class="fas fa-laptop-code"></i>
+                                </div>
+                            </div>
+                            <div class="dev-title">
+                                <h3>Cipher</h3>
+                                <div class="dev-role">Co-Author & Security Engineer</div>
+                            </div>
+                        </div>
+                        
+                        <div class="dev-divider"></div>
+                        
+                        <div class="dev-description">
+                            <p>A specialist in web application security and API vulnerabilities with expertise in automated security testing and DevSecOps integration. I've helped secure critical infrastructure for Fortune 500 companies and government agencies through innovative security solutions.</p>
+                            <p>My approach focuses on developing efficient methodologies that blend security with development workflows, allowing organizations to implement "security as code" principles. I've built several automated scanning frameworks that detect complex vulnerabilities in modern web architectures.</p>
+                            <p>I'm passionate about knowledge sharing and have authored comprehensive security guides that bridge the gap between theoretical concepts and practical implementation. My contributions to bug bounty platforms have helped identify and remediate numerous critical vulnerabilities.</p>
+                        </div>
+                        
+                        <div class="dev-skills">
+                            <span class="skill-tag">Web App Security</span>
+                            <span class="skill-tag">API Security Testing</span>
+                            <span class="skill-tag">DevSecOps</span>
+                            <span class="skill-tag">OSINT Techniques</span>
+                            <span class="skill-tag">Secure Code Review</span>
+                            <span class="skill-tag">Automation</span>
+                            <span class="skill-tag">Bug Bounty</span>
+                        </div>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fas fa-book"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-medium"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
